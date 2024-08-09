@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
+import Image from "next/image";
 
 export default function Home() {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -98,9 +99,9 @@ export default function Home() {
       </button>
       <div className="mt-4">
         {currentImage === "logo" ? (
-          <img src="../../public/next.svg" alt="Logo" />
+          <Image src="../../public/next.svg" alt="Logo" />
         ) : (
-          <img src="../../public/vercel.svg" alt="Product" />
+          <Image src="../../public/vercel.svg" alt="Product" />
         )}
       </div>
       <p className="mt-4 text-lg">{result}</p>
