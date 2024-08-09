@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase/client";
 
@@ -25,6 +26,19 @@ export default function AdminPage() {
     else {
       console.log("Prize inserted:", data);
       setPrizes([...prizes, ...(data || [])]);
+    }
+  };
+
+  const togglePrizeActive = async (id: number, currentStatus: boolean) => {
+    const { data, error } = await supabase
+      .from("prizes")
+      .update({ active: !currentStatus })
+      .eq("id", id);
+    if (error) console.error(error);
+    else {
+      setPrizes(
+        prizes.map((p) => (p.id === id ? { ...p, active: !currentStatus } : p))
+      );
     }
   };
 
