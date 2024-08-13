@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
 import Image from "next/image";
 import caLogo from "../../public/ca-logo.png";
-import jaqueta from "../../public/jaqueta.jpg";
 
 export default function Home() {
   const [prizes, setPrizes] = useState<any[]>([]);
   const [result, setResult] = useState("");
   const [isSpinning, setIsSpinning] = useState(false);
-  const [currentImage, setCurrentImage] = useState("logo");
+  const [currentImage, setCurrentImage] = useState(caLogo);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -22,8 +21,6 @@ export default function Home() {
   }, []);
 
   const drawPrize = async () => {
-    const prize = prizes[Math.floor(Math.random() * prizes.length)];
-    setCurrentImage(prize.image_url);
     const activePrizes = prizes.filter((prize) => prize.active);
     const totalQuantity = activePrizes.reduce(
       (acc, prize) => acc + prize.quantity,
@@ -40,6 +37,7 @@ export default function Home() {
     let accumulated = noPrizeProbability;
     if (random < accumulated) {
       setResult("No Prize");
+      setCurrentImage(caLogo);
     } else {
       for (let i = 0; i < prizeProbabilities.length; i++) {
         accumulated += prizeProbabilities[i].probability;
@@ -53,8 +51,10 @@ export default function Home() {
             if (error) {
               console.error(error);
               setResult("Error updating the prize");
+              setCurrentImage(caLogo);
             } else {
               setResult(drawnPrize.prize);
+              setCurrentImage(drawnPrize.image_url);
               setPrizes((prevPrizes) =>
                 prevPrizes.map((p) =>
                   p.id === drawnPrize.id
@@ -65,6 +65,7 @@ export default function Home() {
             }
           } else {
             setResult("No Prize");
+            setCurrentImage(caLogo);
           }
           break;
         }
@@ -84,9 +85,14 @@ export default function Home() {
       setIsSpinning(true);
       let count = 0;
       const newIntervalId = setInterval(() => {
-        setCurrentImage((prev) => (prev === "logo" ? "product" : "logo"));
+        setCurrentImage((prevImage) =>
+          prevImage === caLogo
+            ? prizes[count % prizes.length].image_url
+            : caLogo
+        );
         count++;
-        if (count === 10) {
+        if (count === 20) {
+          // Adjust the count as needed
           clearInterval(newIntervalId);
           setIsSpinning(false);
           drawPrize();
@@ -104,11 +110,7 @@ export default function Home() {
           isSpinning ? "spinX" : ""
         }`}
       >
-        {currentImage === "logo" ? (
-          <Image src={caLogo} alt="Logo" width={40} height={40} />
-        ) : (
-          <Image src={jaqueta} alt="Product" width={40} height={40} />
-        )}
+        <Image src={currentImage} alt="Prize Image" width={40} height={40} />
       </div>
       <p className="mt-4 text-lg">{result}</p>
       {!isSpinning && <p>Clique na imagem para girar a roleta</p>}
