@@ -26,6 +26,9 @@ export const drawPrize = (prizes: any[]) => {
     ...prize,
     probability: prize.quantity / (totalQuantity + 1),
   }));
+
+  console.log("noPrizeProbability", noPrizeProbability);
+  console.log("prizeProbabilities", prizeProbabilities);
   const random = Math.random();
   let accumulated = noPrizeProbability;
   if (random < accumulated) {

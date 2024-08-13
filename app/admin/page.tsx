@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase/client";
+import Image from "next/image";
 
 export default function AdminPage() {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -42,6 +43,19 @@ export default function AdminPage() {
     }
   };
 
+  const updatePrizeQuantity = async (id: number, newQuantity: number) => {
+    const { data, error } = await supabase
+      .from("prizes")
+      .update({ quantity: newQuantity })
+      .eq("id", id);
+    if (error) console.error(error);
+    else {
+      setPrizes(
+        prizes.map((p) => (p.id === id ? { ...p, quantity: newQuantity } : p))
+      );
+    }
+  };
+
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <form
@@ -74,7 +88,7 @@ export default function AdminPage() {
           <input
             id="quantity"
             type="number"
-            placeholder="Quantity"
+            placeholder="Quantidade"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -110,17 +124,28 @@ export default function AdminPage() {
             className="flex justify-between items-center mb-2 p-2 border-b"
           >
             <span>
-              {prize.prize} - {prize.quantity} -{" "}
+              {prize.prize} -{" "}
+              <input
+                type="number"
+                value={prize.quantity}
+                onChange={(e) =>
+                  updatePrizeQuantity(prize.id, Number(e.target.value))
+                }
+                className="shadow appearance-none border rounded w-20 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />{" "}
+              -{" "}
               <span
                 className={prize.active ? "text-green-500" : "text-red-500"}
               >
                 {prize.active ? "Ativo" : "Inativo"}
               </span>
             </span>
-            <img
+            <Image
               src={prize.image_url}
               alt={prize.prize}
               className="w-16 h-16"
+              width={64}
+              height={64}
             />
             <button
               onClick={() => togglePrizeActive(prize.id, prize.active)}
