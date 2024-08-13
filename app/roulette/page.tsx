@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import caLogo from "../../public/ca-logo.png";
 import {
@@ -14,6 +15,8 @@ export default function Home() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentImage, setCurrentImage] = useState(caLogo);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [hasSpun, setHasSpun] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const loadPrizes = async () => {
@@ -51,6 +54,8 @@ export default function Home() {
   };
 
   const spinRoulette = () => {
+    if (hasSpun) return; // Prevent spinning more than once
+
     if (isSpinning) {
       if (intervalId) {
         clearInterval(intervalId);
@@ -58,6 +63,7 @@ export default function Home() {
       }
       setIsSpinning(false);
       handleDrawPrize();
+      setHasSpun(true); // Mark that the roulette has been spun
     } else {
       setIsSpinning(true);
       let count = 0;
@@ -72,6 +78,7 @@ export default function Home() {
           clearInterval(newIntervalId);
           setIsSpinning(false);
           handleDrawPrize();
+          setHasSpun(true); // Mark that the roulette has been spun
         }
       }, 500);
       setIntervalId(newIntervalId);
@@ -80,16 +87,33 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full items-center justify-center h-screen bg-gray-100">
+      {result && <p>Você está concorrendo a</p>}
       <div
         onClick={spinRoulette}
-        className={`mt-4 border-4 border-blue-500 p-2 ${
+        className={`mt-4 border-4 flex flex-col items-center justify-center border-blue-500 p-2 ${
           isSpinning ? "spinX" : ""
         }`}
       >
         <Image src={currentImage} alt="Prize Image" width={40} height={40} />
+        {result && <p>{result}</p>}
       </div>
-      <p className="mt-4 text-lg">{result}</p>
-      {!isSpinning && <p>Clique na imagem para girar a roleta</p>}
+      {!isSpinning ? (
+        <>
+          {!hasSpun && (
+            <p>Gire o logo da C&A para descobrir seu possível prêmio</p>
+          )}
+          {result && (
+            <button
+              onClick={() => router.push("/genius")}
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Continuar
+            </button>
+          )}
+        </>
+      ) : (
+        <p>Toque para parar</p>
+      )}
     </div>
   );
 }
