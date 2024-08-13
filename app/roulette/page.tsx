@@ -54,7 +54,7 @@ export default function Home() {
   };
 
   const spinRoulette = () => {
-    if (hasSpun) return; // Prevent spinning more than once
+    if (hasSpun) return;
 
     if (isSpinning) {
       if (intervalId) {
@@ -63,7 +63,7 @@ export default function Home() {
       }
       setIsSpinning(false);
       handleDrawPrize();
-      setHasSpun(true); // Mark that the roulette has been spun
+      setHasSpun(true);
     } else {
       setIsSpinning(true);
       let count = 0;
@@ -78,7 +78,7 @@ export default function Home() {
           clearInterval(newIntervalId);
           setIsSpinning(false);
           handleDrawPrize();
-          setHasSpun(true); // Mark that the roulette has been spun
+          setHasSpun(true);
         }
       }, 500);
       setIntervalId(newIntervalId);
