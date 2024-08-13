@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase/client";
 import Image from "next/image";
 import caLogo from "../../public/ca-logo.png";
+import {
+  fetchPrizes,
+  updatePrizeQuantity,
+  drawPrize,
+} from "../services/prizesService";
 
 export default function Home() {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -12,64 +16,37 @@ export default function Home() {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const fetchPrizes = async () => {
-      const { data, error } = await supabase.from("prizes").select("*");
-      if (error) console.error(error);
-      else setPrizes(data);
+    const loadPrizes = async () => {
+      try {
+        const data = await fetchPrizes();
+        setPrizes(data);
+      } catch (error) {
+        console.error(error);
+      }
     };
-    fetchPrizes();
+    loadPrizes();
   }, []);
 
-  const drawPrize = async () => {
-    const activePrizes = prizes.filter((prize) => prize.active);
-    const totalQuantity = activePrizes.reduce(
-      (acc, prize) => acc + prize.quantity,
-      0
-    );
-    const noPrizeProbability = totalQuantity > 0 ? 1 / (totalQuantity + 1) : 1;
-    console.log("Probability of no prize:", noPrizeProbability);
-    const prizeProbabilities = activePrizes.map((prize) => ({
-      ...prize,
-      probability: prize.quantity / (totalQuantity + 1),
-    }));
-    console.log("Probabilities of each prize:", prizeProbabilities);
-    const random = Math.random();
-    let accumulated = noPrizeProbability;
-    if (random < accumulated) {
+  const handleDrawPrize = async () => {
+    const drawnPrize = drawPrize(prizes);
+    if (drawnPrize.prize !== "No Prize" && drawnPrize.quantity > 0) {
+      try {
+        await updatePrizeQuantity(drawnPrize.id, drawnPrize.quantity - 1);
+        setPrizes((prevPrizes) =>
+          prevPrizes.map((p) =>
+            p.id === drawnPrize.id ? { ...p, quantity: p.quantity - 1 } : p
+          )
+        );
+        setResult(drawnPrize.prize);
+        setCurrentImage(drawnPrize.image_url);
+      } catch (error) {
+        console.error(error);
+        setResult("Error updating the prize");
+        setCurrentImage(caLogo);
+      }
+    } else {
       setResult("No Prize");
       setCurrentImage(caLogo);
-    } else {
-      for (let i = 0; i < prizeProbabilities.length; i++) {
-        accumulated += prizeProbabilities[i].probability;
-        if (random < accumulated) {
-          const drawnPrize = prizeProbabilities[i];
-          if (drawnPrize.quantity > 0) {
-            const { data, error } = await supabase
-              .from("prizes")
-              .update({ quantity: drawnPrize.quantity - 1 })
-              .eq("id", drawnPrize.id);
-            if (error) {
-              console.error(error);
-              setResult("Error updating the prize");
-              setCurrentImage(caLogo);
-            } else {
-              setResult(drawnPrize.prize);
-              setCurrentImage(drawnPrize.image_url);
-              setPrizes((prevPrizes) =>
-                prevPrizes.map((p) =>
-                  p.id === drawnPrize.id
-                    ? { ...p, quantity: p.quantity - 1 }
-                    : p
-                )
-              );
-            }
-          } else {
-            setResult("No Prize");
-            setCurrentImage(caLogo);
-          }
-          break;
-        }
-      }
     }
   };
 
@@ -80,7 +57,7 @@ export default function Home() {
         setIntervalId(null);
       }
       setIsSpinning(false);
-      drawPrize();
+      handleDrawPrize();
     } else {
       setIsSpinning(true);
       let count = 0;
@@ -92,10 +69,9 @@ export default function Home() {
         );
         count++;
         if (count === 20) {
-          // Adjust the count as needed
           clearInterval(newIntervalId);
           setIsSpinning(false);
-          drawPrize();
+          handleDrawPrize();
         }
       }, 500);
       setIntervalId(newIntervalId);
