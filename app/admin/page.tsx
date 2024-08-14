@@ -9,6 +9,7 @@ const AdminPage = () => {
   const [quantity, setQuantity] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [dailyLimit, setDailyLimit] = useState(0);
+  const [isConsolation, setIsConsolation] = useState(false);
 
   useEffect(() => {
     const fetchPrizes = async () => {
@@ -28,6 +29,7 @@ const AdminPage = () => {
         image_url: imageUrl,
         daily_limit: dailyLimit,
         active: true,
+        is_consolation: isConsolation,
       },
     ]);
     if (error) console.error(error);
@@ -53,18 +55,32 @@ const AdminPage = () => {
   const updatePrizeQuantity = async (
     id: number,
     newQuantity: number,
-    newDailyLimit: number
+    newDailyLimit: number,
+    isConsolation?: boolean
   ) => {
+    const updateData: any = {
+      quantity: newQuantity,
+      daily_limit: newDailyLimit,
+    };
+    if (isConsolation !== undefined) {
+      updateData.is_consolation = isConsolation;
+    }
+
     const { data, error } = await supabase
       .from("prizes")
-      .update({ quantity: newQuantity, daily_limit: newDailyLimit })
+      .update(updateData)
       .eq("id", id);
     if (error) console.error(error);
     else {
       setPrizes(
         prizes.map((p) =>
           p.id === id
-            ? { ...p, quantity: newQuantity, daily_limit: newDailyLimit }
+            ? {
+                ...p,
+                quantity: newQuantity,
+                daily_limit: newDailyLimit,
+                is_consolation: isConsolation,
+              }
             : p
         )
       );
@@ -141,6 +157,17 @@ const AdminPage = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Prêmio de Consolação
+          </label>
+          <input
+            type="checkbox"
+            checked={isConsolation}
+            onChange={(e) => setIsConsolation(e.target.checked)}
+            className="mr-2 leading-tight"
+          />
+        </div>
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -186,7 +213,23 @@ const AdminPage = () => {
                 className={prize.active ? "text-green-500" : "text-red-500"}
               >
                 {prize.active ? "Ativo" : "Inativo"}
-              </span>
+              </span>{" "}
+              -{" "}
+              <label>
+                Consolação:{" "}
+                <input
+                  type="checkbox"
+                  checked={prize.is_consolation}
+                  onChange={(e) =>
+                    updatePrizeQuantity(
+                      prize.id,
+                      prize.quantity,
+                      prize.daily_limit,
+                      e.target.checked
+                    )
+                  }
+                />
+              </label>
             </span>
             <Image
               src={prize.image_url}

@@ -9,15 +9,16 @@ import {
   updateDistributedToday,
   drawPrize,
 } from "../services/prizesService";
+import { useGameContext } from "../context/GameContext";
 
-export default function Home() {
+const RoulettePage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
-  const [result, setResult] = useState("");
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentImage, setCurrentImage] = useState(caLogo);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [hasSpun, setHasSpun] = useState(false);
   const router = useRouter();
+  const { drawnPrize, setDrawnPrize } = useGameContext();
 
   useEffect(() => {
     const loadPrizes = async () => {
@@ -36,21 +37,18 @@ export default function Home() {
       (acc, prize) => acc + prize.distributed_today,
       0
     );
-    const drawnPrize = drawPrize(prizes, distributedToday);
+    const prize = drawPrize(prizes, distributedToday);
     if (
-      drawnPrize &&
-      drawnPrize.quantity > 0 &&
-      drawnPrize.daily_limit > drawnPrize.distributed_today
+      prize &&
+      prize.quantity > 0 &&
+      prize.daily_limit > prize.distributed_today
     ) {
       try {
-        await updatePrizeQuantity(drawnPrize.id, drawnPrize.quantity - 1);
-        await updateDistributedToday(
-          drawnPrize.id,
-          drawnPrize.distributed_today + 1
-        );
+        await updatePrizeQuantity(prize.id, prize.quantity - 1);
+        await updateDistributedToday(prize.id, prize.distributed_today + 1);
         setPrizes((prevPrizes) =>
           prevPrizes.map((p) =>
-            p.id === drawnPrize.id
+            p.id === prize.id
               ? {
                   ...p,
                   quantity: p.quantity - 1,
@@ -59,15 +57,15 @@ export default function Home() {
               : p
           )
         );
-        setResult(drawnPrize.prize);
-        setCurrentImage(drawnPrize.image_url);
+        setDrawnPrize(prize);
+        setCurrentImage(prize.image_url);
       } catch (error) {
         console.log(error);
-        setResult("Error updating the prize");
+        setDrawnPrize(null);
         setCurrentImage(caLogo);
       }
     } else {
-      setResult("Error updating the prize");
+      setDrawnPrize(null);
       setCurrentImage(caLogo);
     }
   };
@@ -109,7 +107,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full items-center justify-center h-screen bg-gray-100">
-      {result && <p>Você está concorrendo a</p>}
+      {drawnPrize && <p>Você está concorrendo a</p>}
       <div
         onClick={spinRoulette}
         className={`mt-4 border-4 flex flex-col items-center justify-center border-blue-500 p-2 ${
@@ -117,14 +115,14 @@ export default function Home() {
         }`}
       >
         <Image src={currentImage} alt="Prize Image" width={40} height={40} />
-        {result && <p>{result}</p>}
+        {drawnPrize && <p>{drawnPrize?.prize}</p>}
       </div>
       {!isSpinning ? (
         <>
           {!hasSpun && (
             <p>Gire o logo da C&A para descobrir seu possível prêmio</p>
           )}
-          {result && (
+          {drawnPrize && (
             <button
               onClick={() => router.push("/genius")}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
@@ -136,6 +134,12 @@ export default function Home() {
       ) : (
         <p>Toque para parar</p>
       )}
+      <button onClick={() => router.push("/genius/winner")}>TESTE</button>
+      <button onClick={() => router.push("/genius/consolation")}>
+        TESTE 2
+      </button>
     </div>
   );
-}
+};
+
+export default RoulettePage;
