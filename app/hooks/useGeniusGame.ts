@@ -39,7 +39,7 @@ export const useGeniusGame = () => {
           return;
         }
 
-        if ((sequenceCount + 1) % 3 === 0) {
+        if ((sequenceCount + 1) % 3 === 0 && phase < 3) {
           setPhase(phase + 1);
           setMessage(`Parabéns! Você avançou para a fase ${phase + 1}`);
         }
