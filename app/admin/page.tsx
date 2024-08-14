@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
 import Image from "next/image";
-import { QuantityChart } from "./components/QuantityChart";
 
 const AdminPage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -228,10 +227,6 @@ const AdminPage = () => {
           </li>
         ))}
       </ul>
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-    <h2 className="text-2xl font-semibold text-gray-800 mb-4">Estatísticas de Estoque</h2>
-    <QuantityChart prizes={prizes} />
-  </div>
     </div>
   );
 };

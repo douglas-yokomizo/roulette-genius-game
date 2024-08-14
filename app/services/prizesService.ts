@@ -17,7 +17,10 @@ export const updatePrizeQuantity = async (id: number, quantity: number) => {
 
 export const drawPrize = (prizes: any[], distributedToday: number) => {
   const activePrizes = prizes.filter(
-    (prize) => prize.active && prize.daily_limit > prize.distributed_today
+    (prize) =>
+      prize.active &&
+      prize.daily_limit > prize.distributed_today &&
+      !prize.is_consolation
   );
   const totalQuantity = activePrizes.reduce(
     (acc, prize) => acc + prize.quantity,
@@ -47,6 +50,16 @@ export const updateDistributedToday = async (
     .from("prizes")
     .update({ distributed_today: distributedToday })
     .eq("id", id);
+  if (error) throw error;
+  return data;
+};
+
+export const fetchConsolationPrize = async () => {
+  const { data, error } = await supabase
+    .from("prizes")
+    .select("*")
+    .eq("is_consolation", true)
+    .single();
   if (error) throw error;
   return data;
 };
