@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
 import Image from "next/image";
+import { QuantityChart } from "./components/QuantityChart";
 
 const AdminPage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -72,142 +73,165 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <form
-        onSubmit={handleSubmit}
-        className="mb-4 p-4 bg-white shadow-md rounded"
-      >
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="prize"
-          >
-            Prêmio
-          </label>
-          <input
-            id="prize"
-            type="text"
-            placeholder="Nome do Prêmio"
-            value={prize}
-            onChange={(e) => setPrize(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="quantity"
-          >
-            Quantidade
-          </label>
-          <input
-            id="quantity"
-            type="number"
-            placeholder="Quantidade"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="daily_limit"
-          >
-            Limite Diário
-          </label>
-          <input
-            id="daily_limit"
-            type="number"
-            placeholder="Limite Diário"
-            value={dailyLimit}
-            onChange={(e) => setDailyLimit(Number(e.target.value))}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="image_url"
-          >
-            URL da Imagem
-          </label>
-          <input
-            id="image_url"
-            type="text"
-            placeholder="URL da Imagem"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
+    <div className="p-6 max-w-4xl mx-auto">
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
           Adicionar Prêmio
-        </button>
-      </form>
-      <ul className="bg-white shadow-md rounded p-4">
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-medium mb-2"
+              htmlFor="prize"
+            >
+              Prêmio
+            </label>
+            <input
+              id="prize"
+              type="text"
+              placeholder="Nome do Prêmio"
+              value={prize}
+              onChange={(e) => setPrize(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-medium mb-2"
+              htmlFor="quantity"
+            >
+              Quantidade
+            </label>
+            <input
+              id="quantity"
+              type="number"
+              placeholder="Quantidade"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-medium mb-2"
+              htmlFor="daily_limit"
+            >
+              Limite Diário
+            </label>
+            <input
+              id="daily_limit"
+              type="number"
+              placeholder="Limite Diário"
+              value={dailyLimit}
+              onChange={(e) => setDailyLimit(Number(e.target.value))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-medium mb-2"
+              htmlFor="image_url"
+            >
+              URL da Imagem
+            </label>
+            <input
+              id="image_url"
+              type="text"
+              placeholder="URL da Imagem"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Adicionar Prêmio
+          </button>
+        </form>
+      </div>
+
+      <ul className="space-y-4">
         {prizes.map((prize) => (
           <li
             key={prize.id}
-            className="flex justify-between items-center mb-2 p-2 border-b"
+            className="bg-white shadow-lg rounded-lg p-4 flex justify-between items-center"
           >
-            <span>
-              {prize.prize} -{" "}
-              <input
-                type="number"
-                value={prize.quantity}
-                onChange={(e) =>
-                  updatePrizeQuantity(
-                    prize.id,
-                    Number(e.target.value),
-                    prize.daily_limit
-                  )
-                }
-                className="shadow appearance-none border rounded w-20 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />{" "}
-              -{" "}
-              <input
-                type="number"
-                value={prize.daily_limit}
-                onChange={(e) =>
-                  updatePrizeQuantity(
-                    prize.id,
-                    prize.quantity,
-                    Number(e.target.value)
-                  )
-                }
-                className="shadow appearance-none border rounded w-20 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />{" "}
-              -{" "}
-              <span
-                className={prize.active ? "text-green-500" : "text-red-500"}
+            <div className="flex-1">
+              <p className="text-lg font-semibold text-gray-800">
+                {prize.prize}
+              </p>
+              <div className="mt-2 flex space-x-4">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Quantidade
+                  </label>
+                  <input
+                    type="number"
+                    value={prize.quantity}
+                    onChange={(e) =>
+                      updatePrizeQuantity(
+                        prize.id,
+                        Number(e.target.value),
+                        prize.daily_limit
+                      )
+                    }
+                    className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Limite Diário
+                  </label>
+                  <input
+                    type="number"
+                    value={prize.daily_limit}
+                    onChange={(e) =>
+                      updatePrizeQuantity(
+                        prize.id,
+                        prize.quantity,
+                        Number(e.target.value)
+                      )
+                    }
+                    className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <p
+                className={`mt-2 font-medium ${
+                  prize.active ? "text-green-600" : "text-red-600"
+                }`}
               >
                 {prize.active ? "Ativo" : "Inativo"}
-              </span>
-            </span>
-            <Image
-              src={prize.image_url}
-              alt={prize.prize}
-              className="w-16 h-16"
-              width={64}
-              height={64}
-            />
-            <button
-              onClick={() => togglePrizeActive(prize.id, prize.active)}
-              className={`ml-4 py-1 px-2 rounded ${
-                prize.active
-                  ? "bg-red-500 hover:bg-red-700"
-                  : "bg-green-500 hover:bg-green-700"
-              } text-white`}
-            >
-              {prize.active ? "Desativar" : "Ativar"}
-            </button>
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Image
+                src={prize.image_url}
+                alt={prize.prize}
+                className="w-16 h-16 rounded-md"
+                width={64}
+                height={64}
+              />
+              <button
+                onClick={() => togglePrizeActive(prize.id, prize.active)}
+                className={`py-2 px-4 rounded-md text-white ${
+                  prize.active
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
+              >
+                {prize.active ? "Desativar" : "Ativar"}
+              </button>
+            </div>
           </li>
         ))}
       </ul>
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4">Estatísticas de Estoque</h2>
+    <QuantityChart prizes={prizes} />
+  </div>
     </div>
   );
 };
