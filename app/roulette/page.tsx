@@ -44,19 +44,7 @@ const RoulettePage = () => {
       prize.daily_limit > prize.distributed_today
     ) {
       try {
-        await updatePrizeQuantity(prize.id, prize.quantity - 1);
-        await updateDistributedToday(prize.id, prize.distributed_today + 1);
-        setPrizes((prevPrizes) =>
-          prevPrizes.map((p) =>
-            p.id === prize.id
-              ? {
-                  ...p,
-                  quantity: p.quantity - 1,
-                  distributed_today: p.distributed_today + 1,
-                }
-              : p
-          )
-        );
+        const prize = drawPrize(prizes, distributedToday);
         setDrawnPrize(prize);
         setCurrentImage(prize.image_url);
       } catch (error) {

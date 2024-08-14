@@ -2,6 +2,10 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useGameContext } from "../context/GameContext";
+import {
+  updatePrizeQuantity,
+  updateDistributedToday,
+} from "../services/prizesService";
 
 const colors = ["vermelho", "verde", "azul", "amarelo"];
 
@@ -17,7 +21,7 @@ export const useGeniusGame = () => {
   const [hasWon, setHasWon] = useState(false);
   const [lostAtThirdPhase, setLostAtThirdPhase] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const { setConsolationPrize } = useGameContext();
+  const { setConsolationPrize, drawnPrize } = useGameContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +35,7 @@ export const useGeniusGame = () => {
         if (sequenceCount + 1 === 10) {
           setMessage("Parabéns! Você completou o jogo.");
           setHasWon(true);
+          deductPrize(drawnPrize);
           return;
         }
 
@@ -112,6 +117,15 @@ export const useGeniusGame = () => {
       setTimeout(() => {
         setClickedColor(null);
       }, 300);
+    }
+  };
+
+  const deductPrize = async (prize: any) => {
+    try {
+      await updatePrizeQuantity(prize.id, prize.quantity - 1);
+      await updateDistributedToday(prize.id, prize.distributed_today + 1);
+    } catch (error) {
+      console.error("Failed to deduct prize:", error);
     }
   };
 

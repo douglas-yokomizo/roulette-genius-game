@@ -1,11 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchConsolationPrize } from "@/app/services/prizesService";
+import {
+  fetchConsolationPrize,
+  updatePrizeQuantity,
+  updateDistributedToday,
+} from "@/app/services/prizesService";
 import Image from "next/image";
 
 interface Prize {
+  id: number;
   image_url: string;
   prize: string;
+  quantity: number;
+  distributed_today: number;
 }
 
 const ConsolationPage = () => {
@@ -16,6 +23,11 @@ const ConsolationPage = () => {
       try {
         const prize = await fetchConsolationPrize();
         setConsolationPrize(prize);
+
+        if (prize) {
+          await updatePrizeQuantity(prize.id, prize.quantity - 1);
+          await updateDistributedToday(prize.id, prize.distributed_today + 1);
+        }
       } catch (error) {
         console.error("Failed to fetch consolation prize:", error);
       }
