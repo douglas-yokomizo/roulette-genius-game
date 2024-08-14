@@ -6,6 +6,7 @@ import caLogo from "../../public/ca-logo.png";
 import {
   fetchPrizes,
   updatePrizeQuantity,
+  updateDistributedToday,
   drawPrize,
 } from "../services/prizesService";
 
@@ -31,31 +32,48 @@ export default function Home() {
   }, []);
 
   const handleDrawPrize = async () => {
-    const drawnPrize = drawPrize(prizes);
-    if (drawnPrize.prize !== "No Prize" && drawnPrize.quantity > 0) {
+    const distributedToday = prizes.reduce(
+      (acc, prize) => acc + prize.distributed_today,
+      0
+    );
+    const drawnPrize = drawPrize(prizes, distributedToday);
+    if (
+      drawnPrize &&
+      drawnPrize.quantity > 0 &&
+      drawnPrize.daily_limit > drawnPrize.distributed_today
+    ) {
       try {
         await updatePrizeQuantity(drawnPrize.id, drawnPrize.quantity - 1);
+        await updateDistributedToday(
+          drawnPrize.id,
+          drawnPrize.distributed_today + 1
+        );
         setPrizes((prevPrizes) =>
           prevPrizes.map((p) =>
-            p.id === drawnPrize.id ? { ...p, quantity: p.quantity - 1 } : p
+            p.id === drawnPrize.id
+              ? {
+                  ...p,
+                  quantity: p.quantity - 1,
+                  distributed_today: p.distributed_today + 1,
+                }
+              : p
           )
         );
         setResult(drawnPrize.prize);
         setCurrentImage(drawnPrize.image_url);
       } catch (error) {
-        console.error(error);
+        console.log(error);
         setResult("Error updating the prize");
         setCurrentImage(caLogo);
       }
     } else {
-      setResult("No Prize");
+      setResult("Error updating the prize");
       setCurrentImage(caLogo);
     }
   };
 
   const spinRoulette = () => {
     if (hasSpun) return;
-
     if (isSpinning) {
       if (intervalId) {
         clearInterval(intervalId);
@@ -84,6 +102,10 @@ export default function Home() {
       setIntervalId(newIntervalId);
     }
   };
+
+  if (prizes.length === 0) {
+    return <p>Carregando...</p>;
+  }
 
   return (
     <div className="flex flex-col w-full items-center justify-center h-screen bg-gray-100">

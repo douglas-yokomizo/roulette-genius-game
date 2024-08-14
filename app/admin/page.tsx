@@ -1,13 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
 import Image from "next/image";
 
-export default function AdminPage() {
+const AdminPage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
   const [prize, setPrize] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
+  const [dailyLimit, setDailyLimit] = useState(0);
 
   useEffect(() => {
     const fetchPrizes = async () => {
@@ -20,9 +21,15 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { data, error } = await supabase
-      .from("prizes")
-      .insert([{ prize, quantity, image_url: imageUrl, active: true }]);
+    const { data, error } = await supabase.from("prizes").insert([
+      {
+        prize,
+        quantity,
+        image_url: imageUrl,
+        daily_limit: dailyLimit,
+        active: true,
+      },
+    ]);
     if (error) console.error(error);
     else {
       console.log("Prize inserted:", data);
@@ -43,15 +50,23 @@ export default function AdminPage() {
     }
   };
 
-  const updatePrizeQuantity = async (id: number, newQuantity: number) => {
+  const updatePrizeQuantity = async (
+    id: number,
+    newQuantity: number,
+    newDailyLimit: number
+  ) => {
     const { data, error } = await supabase
       .from("prizes")
-      .update({ quantity: newQuantity })
+      .update({ quantity: newQuantity, daily_limit: newDailyLimit })
       .eq("id", id);
     if (error) console.error(error);
     else {
       setPrizes(
-        prizes.map((p) => (p.id === id ? { ...p, quantity: newQuantity } : p))
+        prizes.map((p) =>
+          p.id === id
+            ? { ...p, quantity: newQuantity, daily_limit: newDailyLimit }
+            : p
+        )
       );
     }
   };
@@ -97,6 +112,22 @@ export default function AdminPage() {
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="daily_limit"
+          >
+            Limite Diário
+          </label>
+          <input
+            id="daily_limit"
+            type="number"
+            placeholder="Limite Diário"
+            value={dailyLimit}
+            onChange={(e) => setDailyLimit(Number(e.target.value))}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="image_url"
           >
             URL da Imagem
@@ -129,7 +160,24 @@ export default function AdminPage() {
                 type="number"
                 value={prize.quantity}
                 onChange={(e) =>
-                  updatePrizeQuantity(prize.id, Number(e.target.value))
+                  updatePrizeQuantity(
+                    prize.id,
+                    Number(e.target.value),
+                    prize.daily_limit
+                  )
+                }
+                className="shadow appearance-none border rounded w-20 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />{" "}
+              -{" "}
+              <input
+                type="number"
+                value={prize.daily_limit}
+                onChange={(e) =>
+                  updatePrizeQuantity(
+                    prize.id,
+                    prize.quantity,
+                    Number(e.target.value)
+                  )
                 }
                 className="shadow appearance-none border rounded w-20 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />{" "}
@@ -162,4 +210,6 @@ export default function AdminPage() {
       </ul>
     </div>
   );
-}
+};
+
+export default AdminPage;
