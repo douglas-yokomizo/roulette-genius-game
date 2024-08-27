@@ -108,7 +108,9 @@ const RoulettePage = () => {
       {!isSpinning ? (
         <>
           {!hasSpun && (
-            <p>Gire o logo da C&A para descobrir seu possível prêmio</p>
+            <p className="text-center">
+              Gire o logo da C&A <br /> para descobrir seu possível prêmio
+            </p>
           )}
           {drawnPrize && (
             <button
@@ -122,10 +124,6 @@ const RoulettePage = () => {
       ) : (
         <p>Toque para parar</p>
       )}
-      <button onClick={() => router.push("/genius/winner")}>TESTE</button>
-      <button onClick={() => router.push("/genius/consolation")}>
-        TESTE 2
-      </button>
     </div>
   );
 };
