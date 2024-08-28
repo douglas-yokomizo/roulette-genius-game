@@ -63,3 +63,11 @@ export const fetchConsolationPrize = async () => {
   if (error) throw error;
   return data;
 };
+
+export const resetDistributedToday = async () => {
+  const { data, error } = await supabase
+    .from("prizes")
+    .update({ distributed_today: 0 });
+  if (error) throw error;
+  return data;
+};

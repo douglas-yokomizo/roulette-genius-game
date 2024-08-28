@@ -71,6 +71,34 @@ const AdminPage = () => {
     }
   };
 
+  const resetDistributedToday = async () => {
+    const savePromises = prizes.map(async (prize) => {
+      const { data, error } = await supabase.from("distributed_prizes").insert({
+        prize_id: prize.id,
+        distributed_today: prize.distributed_today,
+      });
+      if (error) console.error(error);
+      return data;
+    });
+
+    await Promise.all(savePromises);
+
+    const resetPromises = prizes.map(async (prize) => {
+      const { data, error } = await supabase
+        .from("prizes")
+        .update({ distributed_today: 0 })
+        .eq("id", prize.id);
+      if (error) console.error(error);
+      return data;
+    });
+
+    await Promise.all(resetPromises);
+
+    const { data, error } = await supabase.from("prizes").select("*");
+    if (error) console.error(error);
+    else setPrizes(data);
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
@@ -126,107 +154,45 @@ const AdminPage = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-medium mb-2"
-              htmlFor="image_url"
-            >
-              URL da Imagem
-            </label>
-            <input
-              id="image_url"
-              type="text"
-              placeholder="URL da Imagem"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Adicionar Prêmio
+            Adicionar
           </button>
         </form>
       </div>
-
-      <ul className="space-y-4">
-        {prizes.map((prize) => (
-          <li
-            key={prize.id}
-            className="bg-white shadow-lg rounded-lg p-4 flex justify-between items-center"
-          >
-            <div className="flex-1">
-              <p className="text-lg font-semibold text-gray-800">
-                {prize.prize}
-              </p>
-              <div className="mt-2 flex space-x-4">
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Prêmios</h2>
+        <button
+          onClick={resetDistributedToday}
+          className="bg-red-500 text-white px-4 py-2 rounded-md mb-4"
+        >
+          Resetar Quantidades Distribuídas
+        </button>
+        <ul>
+          {prizes.map((prize) => (
+            <li key={prize.id} className="mb-4">
+              <div className="flex justify-between items-center">
                 <div>
-                  <label className="block text-gray-700 font-medium mb-1">
-                    Quantidade
-                  </label>
-                  <input
-                    type="number"
-                    value={prize.quantity}
-                    onChange={(e) =>
-                      updatePrizeQuantity(
-                        prize.id,
-                        Number(e.target.value),
-                        prize.daily_limit
-                      )
-                    }
-                    className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <h3 className="text-lg font-semibold">{prize.prize}</h3>
+                  <p>Quantidade: {prize.quantity}</p>
+                  <p>Limite Diário: {prize.daily_limit}</p>
+                  <p>Distribuído Hoje: {prize.distributed_today}</p>
                 </div>
-                <div>
-                  <label className="block text-gray-700 font-medium mb-1">
-                    Limite Diário
-                  </label>
-                  <input
-                    type="number"
-                    value={prize.daily_limit}
-                    onChange={(e) =>
-                      updatePrizeQuantity(
-                        prize.id,
-                        prize.quantity,
-                        Number(e.target.value)
-                      )
-                    }
-                    className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                <button
+                  onClick={() => togglePrizeActive(prize.id, prize.active)}
+                  className={`px-4 py-2 rounded-md ${
+                    prize.active ? "bg-green-500" : "bg-gray-500"
+                  } text-white`}
+                >
+                  {prize.active ? "Desativar" : "Ativar"}
+                </button>
               </div>
-              <p
-                className={`mt-2 font-medium ${
-                  prize.active ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {prize.active ? "Ativo" : "Inativo"}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Image
-                src={prize.image_url}
-                alt={prize.prize}
-                className="w-16 h-16 rounded-md"
-                width={64}
-                height={64}
-              />
-              <button
-                onClick={() => togglePrizeActive(prize.id, prize.active)}
-                className={`py-2 px-4 rounded-md text-white ${
-                  prize.active
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                {prize.active ? "Desativar" : "Ativar"}
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
