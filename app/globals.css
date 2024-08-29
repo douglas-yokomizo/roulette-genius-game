@@ -2,15 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes spinX {
+@keyframes flip {
   0% {
-    transform: rotateX(0deg);
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
   }
   100% {
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
   }
 }
 
-.spinX {
-  animation: spinX 1s linear infinite;
+.flip-animation {
+  animation: flip 0.5s infinite;
+}
+
+.logo-container {
+  position: relative;
+  width: 600px;
+  height: 600px;
+}
+
+.logo-container > .logo-image {
+  width: 600px;
+  height: 600px;
+  object-fit: contain;
+}
+
+.prize-image.large-logo {
+  width: 90%;
+  height: 90%;
+  image-rendering: optimizeQuality;
+  object-fit: contain;
+}
+
+.prize-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
 }

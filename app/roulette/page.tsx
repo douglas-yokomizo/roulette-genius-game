@@ -2,13 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import caLogo from "../../public/ca-logo.png";
-import {
-  fetchPrizes,
-  updatePrizeQuantity,
-  updateDistributedToday,
-  drawPrize,
-} from "../services/prizesService";
+import caLogo from "../../public/images/caLogoBgBranco.png";
+import bgCaBranco from "../../public/images/bgCaBranco.png";
+import rirLogo from "../../public/images/rirLogo.png";
+import { fetchPrizes, drawPrize } from "../services/prizesService";
 import { useGameContext } from "../context/GameContext";
 
 const RoulettePage = () => {
@@ -89,41 +86,65 @@ const RoulettePage = () => {
     }
   };
 
+  const handleScreenClick = () => {
+    if (!isSpinning && hasSpun) {
+      router.push("/genius");
+    }
+  };
+
   if (prizes.length === 0) {
     return <p>Carregando...</p>;
   }
 
   return (
-    <div className="flex flex-col w-full items-center justify-center h-screen bg-gray-100">
-      {drawnPrize && <p>Você está concorrendo a</p>}
+    <div
+      className="flex relative flex-col w-full bg-azul bg-cover bg-center items-center justify-center h-screen bg-gray-100"
+      onClick={handleScreenClick}
+    >
+      {!isSpinning && !hasSpun && (
+        <p className="text-center text-white font-thin text-6xl -translate-y-36">
+          arraste o logo para <br /> descobrir seu possível <br />
+          prêmio
+        </p>
+      )}
+      {!isSpinning && hasSpun && drawnPrize && (
+        <p className="text-center text-6xl text-white font-thin -translate-y-36">
+          Você está concorrendo a
+        </p>
+      )}
       <div
         onClick={spinRoulette}
-        className={`mt-4 border-4 flex flex-col items-center justify-center border-blue-500 p-2 ${
-          isSpinning ? "spinX" : ""
+        className={`mt-4 flex flex-col items-center justify-center p-2 ${
+          isSpinning ? "flip-animation" : ""
         }`}
       >
-        <Image src={currentImage} alt="Prize Image" width={40} height={40} />
-        {drawnPrize && <p>{drawnPrize?.prize}</p>}
+        <div className="logo-container">
+          <Image src={bgCaBranco} alt="C&A Logo" className="logo-image" />
+          <Image
+            src={currentImage}
+            alt="Prize Image"
+            className={`prize-image ${
+              currentImage === caLogo ? "large-logo" : ""
+            }`}
+            width={240}
+            height={240}
+          />
+        </div>
       </div>
-      {!isSpinning ? (
-        <>
-          {!hasSpun && (
-            <p className="text-center">
-              Gire o logo da C&A <br /> para descobrir seu possível prêmio
-            </p>
-          )}
-          {drawnPrize && (
-            <button
-              onClick={() => router.push("/genius")}
-              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-            >
-              Continuar
-            </button>
-          )}
-        </>
-      ) : (
-        <p>Toque para parar</p>
+      {isSpinning && (
+        <p className="text-white text-4xl translate-y-20 font-thin">
+          Toque para parar
+        </p>
       )}
+      {!isSpinning && hasSpun && (
+        <p className="translate-y-20 text-center text-white text-5xl font-thin">
+          dê um toque na tela <br /> para continuar o jogo
+        </p>
+      )}
+      <div className="flex text-white absolute bottom-20 text-3xl items-center">
+        <p>o look oficial do</p>
+        <Image src={rirLogo} alt="C&A Logo" width={200} />
+      </div>
     </div>
   );
 };
