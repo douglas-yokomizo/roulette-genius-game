@@ -69,27 +69,39 @@ body {
   transition: filter 0.3s ease;
 }
 
-.roxo-blink {
-  animation: blink 0.6s infinite alternate;
-}
-
-.vermelho-blink {
-  animation: blink 0.6s infinite alternate;
-}
-
-.rosa-blink {
-  animation: blink 0.6s infinite alternate;
-}
-
-.amarelo-blink {
-  animation: blink 0.6s infinite alternate;
-}
-
 @keyframes blink {
   0% {
-    filter: brightness(1);
+    filter: brightness(2);
+  }
+  50% {
+    filter: brightness(1.5);
   }
   100% {
-    filter: brightness(2); /* Aumentar o brilho levemente */
+    filter: brightness(1);
   }
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Sobe 10px */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.blink {
+  animation: blink 0.6s infinite alternate;
+}
+
+.jump {
+  animation: jump 0.6s infinite alternate;
+}
+
+.blink-jump {
+  animation: blink 0.6s ease-in-out infinite alternate,
+    jump 0.6s infinite alternate;
 }

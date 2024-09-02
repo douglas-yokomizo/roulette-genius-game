@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import caLogoAzul from "../public/images/caLogoBgBranco.png";
-import rirLogo from "../public/images/rirLogo.png";
+import rirLogo from "../public/images/rirLogoBranco.png";
 import rightArrow from "../public/images/rightArrow.png";
 import { useRouter } from "next/navigation";
 

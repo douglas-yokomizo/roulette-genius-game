@@ -17,11 +17,18 @@ const GeniusGame = () => {
   } = useGeniusGame();
 
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(3);
 
   const getColorClass = (color: string) => {
     if (activeColor === color || clickedColor === color) {
-      return `active-stroke ${color}-blink`;
+      return `active-stroke blink-jump`;
+    }
+    return "";
+  };
+
+  const getJumpClass = (color: string) => {
+    if (activeColor === color || clickedColor === color) {
+      return `jump`;
     }
     return "";
   };
@@ -47,13 +54,13 @@ const GeniusGame = () => {
       } else {
         clearInterval(countdownInterval);
         setCountdown(0);
-        startGame(); // Inicia o jogo após a contagem regressiva
+        startGame();
       }
     }, 1000);
   };
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center text-center">
+    <div className="flex flex-col h-screen justify-center items-center text-center relative">
       <div className="mb-4 mx-28 -translate-y-72">
         <h1 className="text-7xl font-sharpBold font-bold text-indigo-600 mb-8">
           mostre que você é <br /> do fandom da C&A
@@ -73,7 +80,7 @@ const GeniusGame = () => {
           </p>
         </div>
       ) : (
-        countdown > 0 && <p className="text-3xl font-bold">{countdown}</p>
+        countdown > 0 && <p className="text-6xl font-bold">{countdown}</p>
       )}
       {isGameStarted && countdown === 0 && (
         <div className="my-10">
@@ -86,12 +93,14 @@ const GeniusGame = () => {
                 <Image
                   src={images.rocamboleRoxo}
                   alt="Rocambole Roxo C&A"
-                  className={getColorClass("roxo")}
+                  className={`active-stroke ${getColorClass("roxo")}`}
                 />
                 <Image
                   src={images.colete}
                   alt="colete"
-                  className="absolute inset-0 m-auto w-3/5 object-contain"
+                  className={`absolute inset-0 m-auto w-3/5 object-contain ${getJumpClass(
+                    "roxo"
+                  )}`}
                 />
               </div>
               <div
@@ -101,12 +110,14 @@ const GeniusGame = () => {
                 <Image
                   src={images.rocamboleVermelho}
                   alt="Rocambole Vermelho C&A"
-                  className={getColorClass("vermelho")}
+                  className={`active-stroke ${getColorClass("vermelho")}`}
                 />
                 <Image
                   src={images.camiseta}
                   alt="camiseta"
-                  className="absolute inset-0 m-auto w-5/6 object-contain"
+                  className={`absolute inset-0 m-auto w-5/6 object-contain ${getJumpClass(
+                    "vermelho"
+                  )}`}
                 />
               </div>
               <div
@@ -116,12 +127,14 @@ const GeniusGame = () => {
                 <Image
                   src={images.rocamboleRosa}
                   alt="Rocambole Rosa C&A"
-                  className={getColorClass("rosa")}
+                  className={`active-stroke ${getColorClass("rosa")}`}
                 />
                 <Image
                   src={images.shorts}
                   alt="shorts"
-                  className="absolute inset-0 m-auto w-[90%] object-contain"
+                  className={`absolute inset-0 m-auto w-[90%] object-contain ${getJumpClass(
+                    "rosa"
+                  )}`}
                 />
               </div>
               <div
@@ -131,28 +144,38 @@ const GeniusGame = () => {
                 <Image
                   src={images.rocamboleAmarelo}
                   alt="Rocambole Amarelo C&A"
-                  className={getColorClass("amarelo")}
+                  className={`active-stroke ${getColorClass("amarelo")}`}
                 />
                 <Image
                   src={images.bermuda}
                   alt="bermuda"
-                  className="absolute inset-0 m-auto w-[90%] object-contain"
+                  className={`absolute inset-0 m-auto w-[90%] object-contain ${getJumpClass(
+                    "amarelo"
+                  )}`}
                 />
               </div>
             </div>
           </div>
+          <div className="flex flex-col items-center justify-center mt-64 gap-6">
+            <p className="text-5xl font-bold w-11/12">
+              acompanhe sua pontuação
+            </p>
+            <div className="w-full bg-transparent border-[6px] border-indigo-600 rounded-full mt-4">
+              <div
+                className="bg-indigo-600 h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
       )}
-      <p className="my-5">Sua pontuação</p>
-      <div className="flex items-center justify-center">
-        <div className="w-2/3 bg-gray-200 rounded-full">
-          <div
-            className="bg-green-800 h-4 rounded-full"
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
-        </div>
-      </div>
-      {message && <p className="my-5">{message}</p>}
+      {message && <p className=" text-4xl my-5">{message}</p>}
+      <Image
+        src={images.lookOficial}
+        alt="Look oficial do RIR"
+        width={500}
+        className="absolute bottom-20"
+      />
     </div>
   );
 };

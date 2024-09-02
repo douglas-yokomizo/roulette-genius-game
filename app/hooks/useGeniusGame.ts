@@ -13,7 +13,7 @@ export const useGeniusGame = () => {
   const [sequence, setSequence] = useState<string[]>([]);
   const [userSequence, setUserSequence] = useState<string[]>([]);
   const [isUserTurn, setIsUserTurn] = useState(false);
-  const [message, setMessage] = useState("Presione botão para começar");
+  const [message, setMessage] = useState("");
   const [phase, setPhase] = useState(1);
   const [sequenceCount, setSequenceCount] = useState(0);
   const [activeColor, setActiveColor] = useState<string | null>(null);

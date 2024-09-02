@@ -2,7 +2,7 @@ import bgAzul from "./bgAzul.png";
 import bgCaBranco from "./bgCaBranco.png";
 import caLogoBgBranco from "./caLogoBgBranco.png";
 import rightArrow from "./rightArrow.png";
-import rirLogo from "./rirLogo.png";
+import rirLogo from "./rirLogoBranco.png";
 import rocamboleAmarelo from "./rocamboleAmarelo.svg";
 import rocamboleRosa from "./rocamboleRosa.svg";
 import rocamboleRoxo from "./rocamboleRoxo.svg";
@@ -11,6 +11,7 @@ import bermuda from "./bermuda.png";
 import camiseta from "./camiseta.png";
 import colete from "./colete.png";
 import shorts from "./shorts.png";
+import lookOficial from "./lookOficial.png";
 
 export const images = {
   bgAzul,
@@ -26,4 +27,5 @@ export const images = {
   camiseta,
   colete,
   shorts,
+  lookOficial,
 };
