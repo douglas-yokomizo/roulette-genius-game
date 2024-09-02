@@ -7,7 +7,7 @@ import {
   updateDistributedToday,
 } from "../services/prizesService";
 
-const colors = ["vermelho", "verde", "azul", "amarelo"];
+const colors = ["vermelho", "roxo", "rosa", "amarelo"];
 
 export const useGeniusGame = () => {
   const [sequence, setSequence] = useState<string[]>([]);

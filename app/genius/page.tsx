@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGeniusGame } from "../hooks/useGeniusGame";
+import { images } from "@/public/images";
+import Image from "next/image";
 
 const GeniusGame = () => {
   const {
@@ -10,80 +12,137 @@ const GeniusGame = () => {
     handleUserClick,
     startGame,
     progressPercentage,
+    sequence,
+    isUserTurn,
   } = useGeniusGame();
+
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+
+  const getColorClass = (color: string) => {
+    if (activeColor === color || clickedColor === color) {
+      return `active-stroke ${color}-blink`;
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    if (!isUserTurn) {
+      sequence.forEach((color, index) => {
+        setTimeout(() => {
+          handleUserClick(color);
+        }, index * 500);
+      });
+    }
+  }, [sequence, isUserTurn, handleUserClick]);
+
+  const handleStartGame = () => {
+    setIsGameStarted(true);
+    let timer = countdown;
+
+    const countdownInterval = setInterval(() => {
+      if (timer > 1) {
+        timer--;
+        setCountdown(timer);
+      } else {
+        clearInterval(countdownInterval);
+        setCountdown(0);
+        startGame(); // Inicia o jogo após a contagem regressiva
+      }
+    }, 1000);
+  };
 
   return (
     <div className="flex flex-col h-screen justify-center items-center text-center">
-      <div className="mb-4 mx-28">
-        <h1 className="text-6xl font-sharpBold font-extrabold text-indigo-600 mb-4">
+      <div className="mb-4 mx-28 -translate-y-72">
+        <h1 className="text-7xl font-sharpBold font-bold text-indigo-600 mb-8">
           mostre que você é <br /> do fandom da C&A
         </h1>
-        <h3 className="text-4xl font-sharp font-bold">
+        <h3 className="text-5xl font-sharp font-bold">
           faça a mesma sequência <br /> de peças e cores <br /> para acumular
           pontos
         </h3>
       </div>
-      <p>{message}</p>
-      <div className="my-10">
-        <div className="flex justify-center items-center h-72">
-          <div className="grid grid-rows-2 grid-cols-2 gap-10">
-            <div className="row-start-1 col-start-1">
-              <button
+      {!isGameStarted ? (
+        <div
+          className="flex justify-center items-center h-72"
+          onClick={handleStartGame}
+        >
+          <p className="text-5xl font-bold animate-pulse">
+            Toque na tela para começar o jogo
+          </p>
+        </div>
+      ) : (
+        countdown > 0 && <p className="text-3xl font-bold">{countdown}</p>
+      )}
+      {isGameStarted && countdown === 0 && (
+        <div className="my-10">
+          <div className="flex justify-center items-center h-72">
+            <div className="grid grid-rows-2 grid-cols-2 gap-10 gap-y-20">
+              <div
+                className="row-start-1 col-start-1 relative"
+                onClick={() => handleUserClick("roxo")}
+              >
+                <Image
+                  src={images.rocamboleRoxo}
+                  alt="Rocambole Roxo C&A"
+                  className={getColorClass("roxo")}
+                />
+                <Image
+                  src={images.colete}
+                  alt="colete"
+                  className="absolute inset-0 m-auto w-3/5 object-contain"
+                />
+              </div>
+              <div
+                className="row-start-1 col-start-2 relative"
                 onClick={() => handleUserClick("vermelho")}
-                className={`w-24 h-24 ${
-                  activeColor === "vermelho" || clickedColor === "vermelho"
-                    ? "bg-red-300"
-                    : "bg-red-600"
-                }`}
               >
-                Vermelho
-              </button>
-            </div>
-            <div className="row-start-1 col-start-2">
-              <button
-                onClick={() => handleUserClick("azul")}
-                className={`w-24 h-24 ${
-                  activeColor === "azul" || clickedColor === "azul"
-                    ? "bg-blue-300"
-                    : "bg-blue-600"
-                }`}
+                <Image
+                  src={images.rocamboleVermelho}
+                  alt="Rocambole Vermelho C&A"
+                  className={getColorClass("vermelho")}
+                />
+                <Image
+                  src={images.camiseta}
+                  alt="camiseta"
+                  className="absolute inset-0 m-auto w-5/6 object-contain"
+                />
+              </div>
+              <div
+                className="row-start-2 col-start-1 relative"
+                onClick={() => handleUserClick("rosa")}
               >
-                Azul
-              </button>
-            </div>
-            <div className="row-start-2 col-start-1">
-              <button
+                <Image
+                  src={images.rocamboleRosa}
+                  alt="Rocambole Rosa C&A"
+                  className={getColorClass("rosa")}
+                />
+                <Image
+                  src={images.shorts}
+                  alt="shorts"
+                  className="absolute inset-0 m-auto w-[90%] object-contain"
+                />
+              </div>
+              <div
+                className="row-start-2 col-start-2 relative"
                 onClick={() => handleUserClick("amarelo")}
-                className={`w-24 h-24 ${
-                  activeColor === "amarelo" || clickedColor === "amarelo"
-                    ? "bg-yellow-300"
-                    : "bg-yellow-600"
-                }`}
               >
-                Amarelo
-              </button>
-            </div>
-            <div className="row-start-2 col-start-2">
-              <button
-                onClick={() => handleUserClick("verde")}
-                className={`w-24 h-24 ${
-                  activeColor === "verde" || clickedColor === "verde"
-                    ? "bg-green-300"
-                    : "bg-green-600"
-                }`}
-              >
-                Verde
-              </button>
+                <Image
+                  src={images.rocamboleAmarelo}
+                  alt="Rocambole Amarelo C&A"
+                  className={getColorClass("amarelo")}
+                />
+                <Image
+                  src={images.bermuda}
+                  alt="bermuda"
+                  className="absolute inset-0 m-auto w-[90%] object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <button
-        className="bg-blue-800 p-4 rounded-xl text-white"
-        onClick={startGame}
-      >
-        Começar
-      </button>
+      )}
       <p className="my-5">Sua pontuação</p>
       <div className="flex items-center justify-center">
         <div className="w-2/3 bg-gray-200 rounded-full">
@@ -93,6 +152,7 @@ const GeniusGame = () => {
           ></div>
         </div>
       </div>
+      {message && <p className="my-5">{message}</p>}
     </div>
   );
 };

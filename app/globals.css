@@ -64,3 +64,32 @@ body {
   height: 50%;
   object-fit: contain;
 }
+
+.active-stroke {
+  transition: filter 0.3s ease;
+}
+
+.roxo-blink {
+  animation: blink 0.6s infinite alternate;
+}
+
+.vermelho-blink {
+  animation: blink 0.6s infinite alternate;
+}
+
+.rosa-blink {
+  animation: blink 0.6s infinite alternate;
+}
+
+.amarelo-blink {
+  animation: blink 0.6s infinite alternate;
+}
+
+@keyframes blink {
+  0% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(2); /* Aumentar o brilho levemente */
+  }
+}
