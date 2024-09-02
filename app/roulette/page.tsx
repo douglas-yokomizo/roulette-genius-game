@@ -34,14 +34,10 @@ const RoulettePage = () => {
       (acc, prize) => acc + prize.distributed_today,
       0
     );
+
     const prize = drawPrize(prizes, distributedToday);
-    if (
-      prize &&
-      prize.quantity > 0 &&
-      prize.daily_limit > prize.distributed_today
-    ) {
+    if (prize) {
       try {
-        const prize = drawPrize(prizes, distributedToday);
         setDrawnPrize(prize);
         setCurrentImage(prize.image_url);
       } catch (error) {
@@ -69,11 +65,14 @@ const RoulettePage = () => {
       setIsSpinning(true);
       let count = 0;
       const newIntervalId = setInterval(() => {
-        setCurrentImage((prevImage) =>
-          prevImage === caLogo
-            ? prizes[count % prizes.length].image_url
-            : caLogo
-        );
+        setCurrentImage((prevImage) => {
+          const filteredPrizes = prizes.filter(
+            (prize) => !prize.is_consolation
+          );
+          return prevImage === caLogo
+            ? filteredPrizes[count % filteredPrizes.length]?.image_url || caLogo
+            : caLogo;
+        });
         count++;
         if (count === 20) {
           clearInterval(newIntervalId);
