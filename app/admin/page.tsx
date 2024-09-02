@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
-import Image from "next/image";
+import { useGameContext } from "../context/GameContext";
 
 const AdminPage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -9,6 +9,27 @@ const AdminPage = () => {
   const [quantity, setQuantity] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [dailyLimit, setDailyLimit] = useState(0);
+  const { difficulty, setDifficulty } = useGameContext();
+  const [difficultyState, setDifficultyState] = useState(difficulty);
+
+  useEffect(() => {
+    setDifficultyState(difficulty);
+  }, [difficulty]);
+
+  const handleDifficultyChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newDifficulty = event.target.value;
+    setDifficultyState(newDifficulty);
+  };
+
+  const handleSaveDifficulty = async () => {
+    setDifficulty(difficultyState);
+    const { data, error } = await supabase
+      .from("game_settings")
+      .update({ difficulty: difficultyState })
+      .eq("id", 1);
+  };
 
   useEffect(() => {
     const fetchPrizes = async () => {
@@ -161,6 +182,22 @@ const AdminPage = () => {
             Adicionar
           </button>
         </form>
+        <label htmlFor="difficulty">Select Game Difficulty:</label>
+        <select
+          id="difficulty"
+          value={difficultyState}
+          onChange={handleDifficultyChange}
+        >
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button
+          onClick={handleSaveDifficulty}
+          className="bg-green-500 text-white px-4 py-2 rounded-md mt-4"
+        >
+          Salvar Dificuldade
+        </button>
       </div>
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Prêmios</h2>

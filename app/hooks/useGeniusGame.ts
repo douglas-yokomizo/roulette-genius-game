@@ -21,8 +21,20 @@ export const useGeniusGame = () => {
   const [hasWon, setHasWon] = useState(false);
   const [lostAtThirdPhase, setLostAtThirdPhase] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const { setConsolationPrize, drawnPrize } = useGameContext();
+  const { setConsolationPrize, drawnPrize, difficulty } = useGameContext();
   const router = useRouter();
+
+  const getWinningSequenceCount = () => {
+    switch (difficulty) {
+      case "easy":
+        return 5;
+      case "medium":
+        return 7;
+      case "hard":
+      default:
+        return 10;
+    }
+  };
 
   useEffect(() => {
     if (userSequence.length === sequence.length && isUserTurn) {
@@ -32,7 +44,7 @@ export const useGeniusGame = () => {
         setIsUserTurn(false);
         setSequenceCount(sequenceCount + 1);
 
-        if (sequenceCount + 1 === 10) {
+        if (sequenceCount + 1 === getWinningSequenceCount()) {
           setMessage("Parabéns! Você completou o jogo.");
           setHasWon(true);
           deductPrize(drawnPrize);
@@ -96,18 +108,20 @@ export const useGeniusGame = () => {
   };
 
   const playSequence = (seq: string[]) => {
+    const delay =
+      difficulty === "easy" ? 1000 : difficulty === "medium" ? 700 : 500;
     seq.forEach((color, index) => {
       setTimeout(() => {
         setActiveColor(color);
-      }, index * 1000);
+      }, index * delay);
       setTimeout(() => {
         setActiveColor(null);
-      }, index * 1000 + 500);
+      }, index * delay + delay / 2);
     });
     setTimeout(() => {
       setMessage("Sua vez");
       setIsUserTurn(true);
-    }, seq.length * 1000 + 500);
+    }, seq.length * delay + delay / 2);
   };
 
   const handleUserClick = (color: string) => {
@@ -143,7 +157,7 @@ export const useGeniusGame = () => {
     }, 1000);
   };
 
-  const progressPercentage = (sequenceCount / 10) * 100;
+  const progressPercentage = (sequenceCount / getWinningSequenceCount()) * 100;
 
   return {
     sequence,
