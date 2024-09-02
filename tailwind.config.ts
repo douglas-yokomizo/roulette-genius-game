@@ -11,6 +11,10 @@ const config: Config = {
       backgroundImage: {
         azul: "url('../public/images/bgAzul.png')",
       },
+      fontFamily: {
+        sharp: ["SharpSans", "sans-serif"],
+        sharpBold: ["SharpSans-Bold", "sans-serif"],
+      },
     },
   },
   plugins: [],

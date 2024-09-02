@@ -13,16 +13,21 @@ const GeniusGame = () => {
   } = useGeniusGame();
 
   return (
-    <div className="text-center">
-      <h1 className="text-2xl font-bold mb-4">
-        Mostre que você é craque nos looks C&A Faça a mesma sequência de peças e
-        cores para acumular pontos!
-      </h1>
+    <div className="flex flex-col h-screen justify-center items-center text-center">
+      <div className="mb-4 mx-28">
+        <h1 className="text-6xl font-sharpBold font-extrabold text-indigo-600 mb-4">
+          mostre que você é <br /> do fandom da C&A
+        </h1>
+        <h3 className="text-4xl font-sharp font-bold">
+          faça a mesma sequência <br /> de peças e cores <br /> para acumular
+          pontos
+        </h3>
+      </div>
       <p>{message}</p>
       <div className="my-10">
         <div className="flex justify-center items-center h-72">
-          <div className="grid grid-rows-3 grid-cols-3 gap-2">
-            <div className="row-start-1 col-start-2">
+          <div className="grid grid-rows-2 grid-cols-2 gap-10">
+            <div className="row-start-1 col-start-1">
               <button
                 onClick={() => handleUserClick("vermelho")}
                 className={`w-24 h-24 ${
@@ -34,7 +39,7 @@ const GeniusGame = () => {
                 Vermelho
               </button>
             </div>
-            <div className="row-start-2 col-start-1">
+            <div className="row-start-1 col-start-2">
               <button
                 onClick={() => handleUserClick("azul")}
                 className={`w-24 h-24 ${
@@ -46,7 +51,7 @@ const GeniusGame = () => {
                 Azul
               </button>
             </div>
-            <div className="row-start-2 col-start-3">
+            <div className="row-start-2 col-start-1">
               <button
                 onClick={() => handleUserClick("amarelo")}
                 className={`w-24 h-24 ${
@@ -58,7 +63,7 @@ const GeniusGame = () => {
                 Amarelo
               </button>
             </div>
-            <div className="row-start-3 col-start-2">
+            <div className="row-start-2 col-start-2">
               <button
                 onClick={() => handleUserClick("verde")}
                 className={`w-24 h-24 ${

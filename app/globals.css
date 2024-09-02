@@ -14,6 +14,24 @@
   }
 }
 
+@font-face {
+  font-family: SharpSans;
+  src: url("../public/fonts/SharpSans.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: SharpSansBold;
+  src: url("../public/fonts/SharpSans_Bold.otf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  font-family: "SharpSans", sans-serif;
+}
+
 .flip-animation {
   animation: flip 0.5s infinite;
 }
