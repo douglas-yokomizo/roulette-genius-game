@@ -17,6 +17,7 @@ const config: Config = {
       },
       colors: {
         azul: "#4200F8",
+        cinza: "#E6E6E6",
       },
     },
   },
