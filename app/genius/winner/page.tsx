@@ -18,7 +18,7 @@ const WinnerPage = () => {
           <Image
             src={drawnPrize.image_url}
             alt="Prêmio"
-            className="absolute w-1/2 h-auto top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
+            className="absolute w-1/2 h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
           />
         )}
       </div>
