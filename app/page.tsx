@@ -11,21 +11,51 @@ const StartPage = () => {
   const [cpf, setCpf] = useState("");
   const router = useRouter();
 
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCpf(e.target.value);
+  const formatCpf = (value: string) => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+      .slice(0, 14);
   };
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    if (rawValue.length <= 11) {
+      setCpf(formatCpf(e.target.value));
+    }
+  };
+  console.log(cpf);
 
   const handleStart = async () => {
     const { data, error } = await supabase
       .from("users")
-      .select("cpf")
+      .select("cpf, hasPlayed")
       .eq("cpf", cpf)
       .single();
 
     if (error || !data) {
       alert("CPF não encontrado. Por favor, verifique e tente novamente.");
+    } else if (data.hasPlayed) {
+      alert("Você já jogou. Não é permitido jogar novamente.");
     } else {
-      router.push("/roulette");
+      const formattedCpfFromSupabase = formatCpf(data.cpf);
+      if (formattedCpfFromSupabase === cpf) {
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({ hasPlayed: true })
+          .eq("cpf", cpf);
+
+        if (updateError) {
+          console.error("Erro ao atualizar o status do jogo:", updateError);
+          alert("Houve um erro ao iniciar o jogo. Tente novamente.");
+        } else {
+          router.push("/roulette");
+        }
+      } else {
+        alert("CPF não encontrado. Por favor, verifique e tente novamente.");
+      }
     }
   };
 
