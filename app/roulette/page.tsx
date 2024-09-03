@@ -19,7 +19,10 @@ const RoulettePage = () => {
     const loadPrizes = async () => {
       try {
         const data = await fetchPrizes();
-        setPrizes(data);
+        const filteredPrizes = data.filter(
+          (prize) => prize.daily_limit > prize.distributed_today
+        );
+        setPrizes(filteredPrizes);
       } catch (error) {
         console.error(error);
       }
@@ -63,17 +66,20 @@ const RoulettePage = () => {
       setIsSpinning(true);
       let count = 0;
       const newIntervalId = setInterval(() => {
-        setCurrentImage((prevImage) => {
+        setCurrentImage(() => {
           const filteredPrizes = prizes.filter(
             (prize) => !prize.is_consolation
           );
-          return prevImage === images.caLogoBgBranco
-            ? filteredPrizes[count % filteredPrizes.length]?.image_url ||
-                images.caLogoBgBranco
-            : images.caLogoBgBranco;
+          if (filteredPrizes.length === 0) {
+            return images.caLogoBgBranco;
+          }
+          return count % 2 === 0
+            ? images.caLogoBgBranco
+            : filteredPrizes[Math.floor(count / 2) % filteredPrizes.length]
+                ?.image_url || images.caLogoBgBranco;
         });
         count++;
-        if (count === 20) {
+        if (count === 40) {
           clearInterval(newIntervalId);
           setIsSpinning(false);
           handleDrawPrize();
