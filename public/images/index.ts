@@ -13,6 +13,7 @@ import colete from "./colete.png";
 import shorts from "./shorts.png";
 import lookOficial from "./lookOficial.png";
 import rocamboleGanhador from "./rocamboleGanhador.png";
+import rocambolePerdeu from "./rocambolePerdeu.png";
 
 export const images = {
   bgAzul,
@@ -30,4 +31,5 @@ export const images = {
   shorts,
   lookOficial,
   rocamboleGanhador,
+  rocambolePerdeu,
 };
