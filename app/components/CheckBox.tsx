@@ -24,7 +24,7 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
         style={{ display: "none" }}
       />
       <span
-        className={`checkbox ${checked ? "checked" : ""}`} // Adicionando a classe 'checked' se estiver marcado
+        className={`checkbox ${checked ? "checked" : ""}`}
         style={{
           width: "1.75rem",
           height: "1.75rem",

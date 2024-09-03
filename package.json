@@ -11,15 +11,21 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.45.1",
     "chart.js": "^4.4.3",
+    "formik": "^2.4.6",
+    "libphonenumber-js": "^1.11.7",
     "next": "14.2.5",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-input-mask": "^2.0.4",
+    "react-phone-input-2": "^2.15.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-input-mask": "^3.0.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
