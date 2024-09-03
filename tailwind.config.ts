@@ -15,6 +15,9 @@ const config: Config = {
         sharp: ["SharpSans", "sans-serif"],
         sharpBold: ["SharpSans-Bold", "sans-serif"],
       },
+      colors: {
+        azul: "#4200F8",
+      },
     },
   },
   plugins: [],

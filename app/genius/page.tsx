@@ -62,7 +62,7 @@ const GeniusGame = () => {
   return (
     <div className="flex flex-col h-screen justify-center items-center text-center relative">
       <div className="mb-4 mx-28 -translate-y-72">
-        <h1 className="text-7xl font-sharpBold font-bold text-indigo-600 mb-8">
+        <h1 className="text-7xl font-sharpBold font-bold text-azul mb-8">
           mostre que você é <br /> do fandom da C&A
         </h1>
         <h3 className="text-5xl font-sharp font-bold">
@@ -160,9 +160,9 @@ const GeniusGame = () => {
             <p className="text-5xl font-bold w-11/12">
               acompanhe sua pontuação
             </p>
-            <div className="w-full bg-transparent border-[6px] border-indigo-600 rounded-full mt-4">
+            <div className="w-full bg-transparent border-[6px] border-azul rounded-full mt-4">
               <div
-                className="bg-indigo-600 h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
+                className="bg-azul h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>

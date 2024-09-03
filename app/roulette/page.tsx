@@ -106,7 +106,7 @@ const RoulettePage = () => {
 
   return (
     <div
-      className="flex relative flex-col w-full bg-azul bg-cover bg-center items-center justify-center h-screen bg-gray-100"
+      className="flex relative flex-col w-full bg-azul items-center justify-center h-screen bg-gray-100"
       onClick={handleScreenClick}
     >
       {!isSpinning && !hasSpun && (

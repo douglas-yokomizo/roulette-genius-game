@@ -9,7 +9,7 @@ const StartPage = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-azul bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col items-center justify-center h-screen bg-azul">
       <Image src={caLogoAzul} alt="C&A Logo" width={400} />
       <p className="text-4xl text-white my-10 font-semibold">
         O look oficial do
