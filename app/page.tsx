@@ -27,7 +27,6 @@ const StartPage = () => {
       setCpf(formatCpf(e.target.value));
     }
   };
-  console.log(cpf);
 
   const handleStart = async () => {
     const { data, error } = await supabase

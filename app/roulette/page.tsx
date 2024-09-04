@@ -5,6 +5,7 @@ import Image from "next/image";
 import { images } from "@/public/images";
 import { fetchPrizes, drawPrize } from "../services/prizesService";
 import { useGameContext } from "../context/GameContext";
+import Loading from "../components/Loading";
 
 const RoulettePage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
@@ -97,11 +98,7 @@ const RoulettePage = () => {
   };
 
   if (prizes.length === 0) {
-    return (
-      <p className="text-6xl font-bold animate-pulse text-blue-600 flex h-screen items-center justify-center">
-        Carregando...
-      </p>
-    );
+    return <Loading />;
   }
 
   return (
