@@ -6,6 +6,7 @@ import caLogoAzul from "../public/images/caLogoBgBranco.png";
 import rirLogo from "../public/images/rirLogoBranco.png";
 import rightArrow from "../public/images/rightArrow.png";
 import { supabase } from "./utils/supabase/client";
+import { toast } from "react-toastify";
 
 const StartPage = () => {
   const [cpf, setCpf] = useState("");
@@ -36,9 +37,13 @@ const StartPage = () => {
       .single();
 
     if (error || !data) {
-      alert("CPF não encontrado. Por favor, verifique e tente novamente.");
+      toast("CPF não encontrado. Por favor, verifique e tente novamente.", {
+        type: "error",
+      });
     } else if (data.hasPlayed) {
-      alert("Você já jogou. Não é permitido jogar novamente.");
+      toast("Você já jogou. Não é permitido jogar novamente.", {
+        type: "error",
+      });
     } else {
       const formattedCpfFromSupabase = formatCpf(data.cpf);
       if (formattedCpfFromSupabase === cpf) {
@@ -49,12 +54,16 @@ const StartPage = () => {
 
         if (updateError) {
           console.error("Erro ao atualizar o status do jogo:", updateError);
-          alert("Houve um erro ao iniciar o jogo. Tente novamente.");
+          toast("Houve um erro ao iniciar o jogo. Tente novamente.", {
+            type: "error",
+          });
         } else {
           router.push("/roulette");
         }
       } else {
-        alert("CPF não encontrado. Por favor, verifique e tente novamente.");
+        toast("CPF não encontrado. Por favor, verifique e tente novamente.", {
+          type: "error",
+        });
       }
     }
   };

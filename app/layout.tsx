@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { GameProvider } from "./context/GameContext";
+import ToastProvider from "./components/ToastProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <GameProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <ToastProvider>{children}</ToastProvider>
+        </body>
       </html>
     </GameProvider>
   );

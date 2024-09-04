@@ -19,6 +19,7 @@
     "react-dom": "^18",
     "react-input-mask": "^2.0.4",
     "react-phone-input-2": "^2.15.1",
+    "react-toastify": "^10.0.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {

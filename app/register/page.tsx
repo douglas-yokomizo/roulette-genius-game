@@ -9,6 +9,7 @@ import InputMask from "react-input-mask";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { parsePhoneNumber } from "libphonenumber-js";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const initialValues = {
@@ -108,6 +109,48 @@ const RegisterPage = () => {
 
     const formattedName = capitalizeName(name);
 
+    const { data: cpfData, error: cpfError } = await supabase
+      .from("users")
+      .select("cpf")
+      .eq("cpf", cpf)
+      .single();
+
+    if (cpfData) {
+      toast("CPF já cadastrado. Por favor, verifique e tente novamente.", {
+        type: "error",
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    const { data: emailData, error: emailError } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email)
+      .single();
+
+    if (emailData) {
+      toast("Email já cadastrado. Por favor, verifique e tente novamente.", {
+        type: "error",
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    const { data: whatsappData, error: whatsappError } = await supabase
+      .from("users")
+      .select("whatsapp")
+      .eq("whatsapp", whatsapp)
+      .single();
+
+    if (whatsappData) {
+      toast("WhatsApp já cadastrado. Por favor, verifique e tente novamente.", {
+        type: "error",
+      });
+      setSubmitting(false);
+      return;
+    }
+
     const { data, error } = await supabase.from("users").insert([
       {
         name: formattedName,
@@ -123,9 +166,13 @@ const RegisterPage = () => {
 
     if (error) {
       console.error("Erro ao cadastrar usuário:", error);
-      alert("Houve um erro ao cadastrar. Tente novamente.");
+      toast("Houve um erro ao cadastrar. Tente novamente.", {
+        type: "error",
+      });
     } else {
-      alert("Usuário cadastrado com sucesso!");
+      toast("Usuário cadastrado com sucesso!", {
+        type: "success",
+      });
       resetForm();
     }
     setSubmitting(false);
