@@ -103,7 +103,7 @@ const RoulettePage = () => {
 
   return (
     <div
-      className="flex relative flex-col w-full bg-azul items-center justify-center h-screen bg-gray-100"
+      className="flex relative flex-col w-full bg-azul items-center justify-center h-screen"
       onClick={handleScreenClick}
     >
       {!isSpinning && !hasSpun && (
@@ -114,7 +114,7 @@ const RoulettePage = () => {
       )}
       {!isSpinning && hasSpun && drawnPrize && (
         <p className="text-center text-6xl text-white font-thin -translate-y-36">
-          Você está concorrendo a
+          você está <br /> concorrendo a
         </p>
       )}
       <div

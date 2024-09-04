@@ -10,6 +10,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
   const initialValues = {
@@ -22,6 +23,7 @@ const RegisterPage = () => {
     bigScreenAgreement: false,
     comunicationAgreement: false,
   };
+  const router = useRouter();
 
   const validateWhatsApp = (value: any, countryCode: any) => {
     if (!value) return false;
@@ -174,6 +176,7 @@ const RegisterPage = () => {
         type: "success",
       });
       resetForm();
+      router.push("/register/success");
     }
     setSubmitting(false);
   };

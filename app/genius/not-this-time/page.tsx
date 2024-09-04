@@ -1,8 +1,20 @@
+"use client";
 import { images } from "@/public/images";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 const NotThisTimePage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [router]);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen relative">
       <h1 className="text-9xl font-sharpBold font-[800] text-azul">

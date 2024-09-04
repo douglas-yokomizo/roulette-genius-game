@@ -2,9 +2,21 @@
 import { useGameContext } from "@/app/context/GameContext";
 import { images } from "@/public/images";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const WinnerPage = () => {
-  const { drawnPrize } = useGameContext();
+  const { drawnPrize, setDrawnPrize } = useGameContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDrawnPrize(null);
+      router.push("/");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [router, setDrawnPrize]);
 
   return (
     <div className="flex bg-azul h-screen text-white flex-col items-center justify-center">
@@ -18,7 +30,9 @@ const WinnerPage = () => {
           <Image
             src={drawnPrize.image_url}
             alt="Prêmio"
-            className="absolute w-1/2 h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
+            className="absolute max-w-[100%] max-h-[100%] object-contain h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
+            width={280}
+            height={280}
           />
         )}
       </div>

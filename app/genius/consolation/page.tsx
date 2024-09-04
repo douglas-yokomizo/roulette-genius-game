@@ -7,6 +7,8 @@ import {
 } from "@/app/services/prizesService";
 import Image from "next/image";
 import { images } from "@/public/images";
+import { useRouter } from "next/navigation";
+import { useGameContext } from "@/app/context/GameContext";
 
 interface Prize {
   id: number;
@@ -18,6 +20,17 @@ interface Prize {
 
 const ConsolationPage = () => {
   const [consolationPrize, setConsolationPrize] = useState<Prize | null>(null);
+  const router = useRouter();
+  const { setDrawnPrize } = useGameContext();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDrawnPrize(null); // Limpa o estado do prêmio
+      router.push("/");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [router, setDrawnPrize]);
 
   useEffect(() => {
     const getConsolationPrize = async () => {
@@ -49,9 +62,9 @@ const ConsolationPage = () => {
           <Image
             src={consolationPrize.image_url}
             alt="Prêmio"
-            width={360}
-            height={360}
-            className="absolute w-1/2 h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
+            width={240}
+            height={240}
+            className="absolute w-1/3 h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
           />
         )}
       </div>

@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        azul: "url('../public/images/bgAzul.png')",
+        success: "url('../public/images/success.png')",
       },
       fontFamily: {
         sharp: ["SharpSans", "sans-serif"],
