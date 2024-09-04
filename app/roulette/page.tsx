@@ -21,7 +21,7 @@ const RoulettePage = () => {
       try {
         const data = await fetchPrizes();
         const filteredPrizes = data.filter(
-          (prize) => prize.daily_limit > prize.distributed_today
+          (prize) => prize.active && prize.daily_limit > prize.distributed_today
         );
         setPrizes(filteredPrizes);
       } catch (error) {

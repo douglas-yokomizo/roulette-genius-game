@@ -2,22 +2,39 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/client";
 import { useGameContext } from "../context/GameContext";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Bar } from "react-chartjs-2";
+import "chart.js/auto";
 
 const AdminPage = () => {
   const [prizes, setPrizes] = useState<any[]>([]);
   const [prize, setPrize] = useState("");
   const [quantity, setQuantity] = useState(0);
-  const [imageUrl, setImageUrl] = useState("");
   const [dailyLimit, setDailyLimit] = useState(0);
   const { difficulty, setDifficulty } = useGameContext();
   const [difficultyState, setDifficultyState] = useState(difficulty);
   const [editingPrize, setEditingPrize] = useState<any | null>(null);
+  const [deletingPrize, setDeletingPrize] = useState<any | null>(null);
+  const [consolationPrize, setConsolationPrize] = useState<any | null>(null);
 
   useEffect(() => {
     setDifficultyState(difficulty);
   }, [difficulty]);
+
+  useEffect(() => {
+    const fetchPrizes = async () => {
+      const { data, error } = await supabase.from("prizes").select("*");
+      if (error) {
+        console.error(error);
+      } else {
+        setPrizes(data);
+        const consolation = data.find((prize) => prize.is_consolation);
+        setConsolationPrize(consolation);
+      }
+    };
+    fetchPrizes();
+  }, []);
 
   const handleDifficultyChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -40,37 +57,20 @@ const AdminPage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchPrizes = async () => {
-      const { data, error } = await supabase.from("prizes").select("*");
-      if (error) {
-        console.error(error);
-        toast.error("Erro ao buscar prêmios");
-      } else {
-        setPrizes(data);
-      }
-    };
-    fetchPrizes();
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data, error } = await supabase.from("prizes").insert([
       {
         prize,
         quantity,
-        image_url: imageUrl,
         daily_limit: dailyLimit,
         active: true,
       },
     ]);
     if (error) {
       console.error(error);
-      toast.error("Erro ao adicionar prêmio");
     } else {
-      console.log("Prize inserted:", data);
-      setPrizes([...prizes, ...(data || [])]);
-      toast.success("Prêmio adicionado com sucesso");
+      setPrizes((prevPrizes) => [...prevPrizes, ...(data || [])]);
     }
   };
 
@@ -78,10 +78,8 @@ const AdminPage = () => {
     const { error } = await supabase.from("prizes").delete().eq("id", id);
     if (error) {
       console.error(error);
-      toast.error("Erro ao excluir prêmio");
     } else {
-      setPrizes(prizes.filter((prize) => prize.id !== id));
-      toast.success("Prêmio excluído com sucesso");
+      setPrizes((prevPrizes) => prevPrizes.filter((prize) => prize.id !== id));
     }
   };
 
@@ -90,21 +88,19 @@ const AdminPage = () => {
     const { data, error } = await supabase
       .from("prizes")
       .update({
-        prize: editingPrize.prize,
-        quantity: editingPrize.quantity,
-        image_url: editingPrize.image_url,
-        daily_limit: editingPrize.daily_limit,
+        prize: editingPrize?.prize,
+        quantity: editingPrize?.quantity,
+        daily_limit: editingPrize?.daily_limit,
+        is_consolation: editingPrize?.is_consolation,
       })
-      .eq("id", editingPrize.id);
+      .eq("id", editingPrize?.id);
     if (error) {
       console.error(error);
-      toast.error("Erro ao editar prêmio");
     } else {
-      setPrizes(
-        prizes.map((p) => (p.id === editingPrize.id ? editingPrize : p))
+      setPrizes((prevPrizes) =>
+        prevPrizes.map((p) => (p.id === editingPrize?.id ? editingPrize : p))
       );
       setEditingPrize(null);
-      toast.success("Prêmio editado com sucesso");
     }
   };
 
@@ -148,21 +144,70 @@ const AdminPage = () => {
     const { data, error } = await supabase.from("prizes").select("*");
     if (error) {
       console.error(error);
-      toast.error("Erro ao resetar quantidades distribuídas");
     } else {
       setPrizes(data);
-      toast.success("Quantidades distribuídas resetadas com sucesso");
     }
   };
 
+  const chartData = {
+    labels: prizes.map((prize) => prize.prize),
+    datasets: [
+      {
+        label: "Distribuído Hoje",
+        data: prizes.map((prize) => prize.distributed_today),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+      },
+    ],
+  };
+
   return (
-    <div className="p-6 max-w-4xl mx-auto font-sharp">
+    <div className="p-6 max-w-6xl mx-auto font-sharp">
       <ToastContainer />
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-          Adicionar Prêmio
+          Dashboard de Prêmios
         </h1>
-        <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Visão Geral</h2>
+            <ul>
+              {prizes.map((prize) => (
+                <li key={prize.id} className="mb-2">
+                  {prize.prize}: {prize.quantity} disponíveis
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Estatísticas</h2>
+            <Bar data={chartData} />
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md mt-6">
+          <h2 className="text-xl font-semibold mb-4">Prêmio de Consolação</h2>
+          {consolationPrize ? (
+            <div>
+              <p>
+                Prêmio atual de consolação:{" "}
+                <span className="font-semibold">{consolationPrize.prize}</span>
+              </p>
+              <button
+                onClick={() => setEditingPrize(consolationPrize)}
+                className="bg-yellow-500 text-white px-4 py-2 rounded-md mt-2"
+              >
+                Editar Prêmio de Consolação
+              </button>
+            </div>
+          ) : (
+            <p>Nenhum prêmio de consolação definido.</p>
+          )}
+        </div>
+      </div>
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+          Gestão de Prêmios
+        </h1>
+        <form onSubmit={handleSubmit} className="mb-6">
           <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2"
@@ -265,7 +310,7 @@ const AdminPage = () => {
                       id="edit_prize"
                       type="text"
                       placeholder="Nome do Prêmio"
-                      value={editingPrize.prize}
+                      value={editingPrize?.prize}
                       onChange={(e) =>
                         setEditingPrize({
                           ...editingPrize,
@@ -286,7 +331,7 @@ const AdminPage = () => {
                       id="edit_quantity"
                       type="number"
                       placeholder="Quantidade"
-                      value={editingPrize.quantity}
+                      value={editingPrize?.quantity}
                       onChange={(e) =>
                         setEditingPrize({
                           ...editingPrize,
@@ -307,7 +352,7 @@ const AdminPage = () => {
                       id="edit_daily_limit"
                       type="number"
                       placeholder="Limite Diário"
-                      value={editingPrize.daily_limit}
+                      value={editingPrize?.daily_limit}
                       onChange={(e) =>
                         setEditingPrize({
                           ...editingPrize,
@@ -315,6 +360,26 @@ const AdminPage = () => {
                         })
                       }
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-gray-700 font-medium mb-2"
+                      htmlFor="edit_is_consolation"
+                    >
+                      Prêmio de Consolação
+                    </label>
+                    <input
+                      id="edit_is_consolation"
+                      type="checkbox"
+                      checked={editingPrize?.is_consolation}
+                      onChange={(e) =>
+                        setEditingPrize({
+                          ...editingPrize,
+                          is_consolation: e.target.checked,
+                        })
+                      }
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                   </div>
                   <button
@@ -331,6 +396,26 @@ const AdminPage = () => {
                     Cancelar
                   </button>
                 </form>
+              ) : deletingPrize && deletingPrize.id === prize.id ? (
+                <div>
+                  <p className="text-lg font-semibold">
+                    Tem certeza que deseja excluir o prêmio {prize.prize}?
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleDeletePrize(prize.id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-md mt-2"
+                    >
+                      Confirmar
+                    </button>
+                    <button
+                      onClick={() => setDeletingPrize(null)}
+                      className="bg-gray-500 text-white px-4 py-2 rounded-md mt-2 ml-2"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <>
                   <h3 className="text-lg font-semibold flex items-center">
@@ -365,7 +450,7 @@ const AdminPage = () => {
                         Editar
                       </button>
                       <button
-                        onClick={() => handleDeletePrize(prize.id)}
+                        onClick={() => setDeletingPrize(prize)}
                         className="bg-red-500 text-white px-4 py-2 rounded-md mt-2 ml-2"
                       >
                         Excluir

@@ -31,8 +31,8 @@ const WinnerPage = () => {
             src={drawnPrize.image_url}
             alt="Prêmio"
             className="absolute max-w-[100%] max-h-[100%] object-contain h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
-            width={280}
-            height={280}
+            width={600}
+            height={600}
           />
         )}
       </div>

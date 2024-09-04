@@ -25,7 +25,7 @@ const ConsolationPage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDrawnPrize(null); // Limpa o estado do prêmio
+      setDrawnPrize(null);
       router.push("/");
     }, 5000);
 
@@ -62,9 +62,9 @@ const ConsolationPage = () => {
           <Image
             src={consolationPrize.image_url}
             alt="Prêmio"
-            width={240}
-            height={240}
-            className="absolute w-1/3 h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
+            width={600}
+            height={600}
+            className="absolute h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
           />
         )}
       </div>
