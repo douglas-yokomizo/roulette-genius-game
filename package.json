@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "pnpm install && npx run supabase start",
+    "db:reset": "npx supabase db reset",
+    "db:push": "npx supabase db push --db-url postgresql://postgres.nzvspxppyqzrpcchotmf:OVtYb4XFhT3JZ16n@aws-0-sa-east-1.pooler.supabase.com:6543/postgres",
+    "supabase:stop": "npx supabase stop"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.1",
