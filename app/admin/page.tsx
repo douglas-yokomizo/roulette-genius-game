@@ -164,51 +164,53 @@ const AdminPage = () => {
     <div className="p-6 max-w-6xl mx-auto font-sharp">
       <ToastContainer />
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Dashboard de Prêmios
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Visão Geral</h2>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Visão Geral</h2>
             <ul>
               {prizes.map((prize) => (
-                <li key={prize.id} className="mb-2">
+                <li key={prize.id} className="mb-2 text-xl">
                   {prize.prize}: {prize.quantity} disponíveis
                 </li>
               ))}
             </ul>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Estatísticas</h2>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Estatísticas</h2>
             <Bar data={chartData} />
           </div>
         </div>
-        <div className="bg-gray-100 p-4 rounded-lg shadow-md mt-6">
-          <h2 className="text-xl font-semibold mb-4">Prêmio de Consolação</h2>
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mt-6">
+          <h2 className="text-2xl font-semibold mb-4">Prêmio de Consolação</h2>
           {consolationPrize ? (
             <div>
-              <p>
+              <p className="text-xl">
                 Prêmio atual de consolação:{" "}
-                <span className="font-semibold">{consolationPrize.prize}</span>
+                <span className="font-semibold text-xl">
+                  {consolationPrize.prize}
+                </span>
               </p>
               <button
                 onClick={() => setEditingPrize(consolationPrize)}
-                className="bg-yellow-500 text-white px-4 py-2 rounded-md mt-2"
+                className="bg-yellow-500 text-white px-4 py-2 text-lg font-sharpBold font-bold rounded-md mt-4"
               >
                 Editar Prêmio de Consolação
               </button>
             </div>
           ) : (
-            <p>Nenhum prêmio de consolação definido.</p>
+            <p className="text-xl">Nenhum prêmio de consolação definido.</p>
           )}
         </div>
       </div>
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Gestão de Prêmios
         </h1>
         <form onSubmit={handleSubmit} className="mb-6">
-          <div className="mb-4">
+          <div className="mb-6">
             <label
               className="block text-gray-700 font-medium mb-2"
               htmlFor="prize"
@@ -224,7 +226,7 @@ const AdminPage = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <label
               className="block text-gray-700 font-medium mb-2"
               htmlFor="quantity"
@@ -240,7 +242,7 @@ const AdminPage = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <label
               className="block text-gray-700 font-medium mb-2"
               htmlFor="daily_limit"
@@ -287,19 +289,19 @@ const AdminPage = () => {
         </button>
       </div>
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Prêmios</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Prêmios</h2>
         <button
           onClick={resetDistributedToday}
           className="bg-red-500 text-white px-4 py-2 rounded-md mb-4"
         >
           Resetar Quantidades Distribuídas
         </button>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {prizes.map((prize) => (
-            <div key={prize.id} className="border rounded-lg p-4 shadow-md">
+            <div key={prize.id} className="border rounded-lg p-6 shadow-md">
               {editingPrize && editingPrize.id === prize.id ? (
                 <form onSubmit={handleEditSubmit}>
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <label
                       className="block text-gray-700 font-medium mb-2"
                       htmlFor="edit_prize"
@@ -320,7 +322,7 @@ const AdminPage = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <label
                       className="block text-gray-700 font-medium mb-2"
                       htmlFor="edit_quantity"
@@ -341,7 +343,7 @@ const AdminPage = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <label
                       className="block text-gray-700 font-medium mb-2"
                       htmlFor="edit_daily_limit"
@@ -362,7 +364,7 @@ const AdminPage = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <label
                       className="block text-gray-700 font-medium mb-2"
                       htmlFor="edit_is_consolation"
@@ -429,7 +431,7 @@ const AdminPage = () => {
                   <p>Quantidade: {prize.quantity}</p>
                   <p>Limite Diário: {prize.daily_limit}</p>
                   <p>Distribuído Hoje: {prize.distributed_today}</p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mt-4">
                     <div
                       onClick={() => togglePrizeActive(prize.id, prize.active)}
                       className={`relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors ${
