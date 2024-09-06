@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "setup": "pnpm install && npx run supabase start",
+    "db": "npx supabase start",
     "db:reset": "npx supabase db reset",
     "db:push": "npx supabase db push --db-url postgresql://postgres.nzvspxppyqzrpcchotmf:OVtYb4XFhT3JZ16n@aws-0-sa-east-1.pooler.supabase.com:6543/postgres",
     "supabase:stop": "npx supabase stop"
@@ -16,6 +17,7 @@
     "@supabase/supabase-js": "^2.45.1",
     "chart.js": "^4.4.3",
     "formik": "^2.4.6",
+    "framer-motion": "^11.5.4",
     "libphonenumber-js": "^1.11.7",
     "next": "14.2.5",
     "react": "^18",

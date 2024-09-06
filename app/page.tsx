@@ -1,16 +1,57 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import caLogoAzul from "../public/images/caLogoBgBranco.png";
 import rirLogo from "../public/images/rirLogoBranco.png";
 import rightArrow from "../public/images/rightArrow.png";
 import { supabase } from "./utils/supabase/client";
 import { toast } from "react-toastify";
+import { images } from "@/public/images";
+
+const Cover = ({ onClick }: { onClick: () => void }) => (
+  <motion.div
+    className="relative flex items-center justify-center h-screen bg-black text-white"
+    onClick={onClick}
+    initial={{ opacity: 1 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 1 }}
+  >
+    <Image
+      src={images.iddleBg}
+      alt=""
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+    <motion.div
+      className="relative flex animate-bounce flex-col items-center justify-center"
+      initial={{ y: 0 }}
+      animate={{ y: -0 }}
+      transition={{ duration: 1 }}
+    >
+      <Image src={caLogoAzul} alt="C&A Logo" width={400} />
+      <p className="text-5xl text-white my-10 font-sharpBold font-bold">
+        o look oficial do
+      </p>
+      <Image src={rirLogo} alt="C&A Logo" width={400} quality={100} />
+    </motion.div>
+  </motion.div>
+);
 
 const StartPage = () => {
   const [cpf, setCpf] = useState("");
+  const [showCover, setShowCover] = useState(true);
+  const [showInput, setShowInput] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!showCover) {
+      setTimeout(() => {
+        setShowInput(true);
+      }, 500);
+    }
+  }, [showCover]);
 
   const formatCpf = (value: string) => {
     return value
@@ -68,34 +109,51 @@ const StartPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-azul">
-      <Image src={caLogoAzul} alt="C&A Logo" width={400} />
-      <p className="text-4xl text-white my-10 font-semibold">
-        O look oficial do
-      </p>
-      <Image
-        src={rirLogo}
-        alt="C&A Logo"
-        width={400}
-        quality={100}
-        layout="intrinsic"
-      />
-      <input
-        type="text"
-        placeholder="CPF"
-        autoComplete="off"
-        value={cpf}
-        onChange={handleCpfChange}
-        className="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-2 w-2/4"
-      />
-      <Image
-        src={rightArrow}
-        alt="Arrow Logo"
-        width={120}
-        className="hover:cursor-pointer"
-        onClick={handleStart}
-      />
-    </div>
+    <>
+      <AnimatePresence>
+        {showCover ? (
+          <Cover onClick={() => setShowCover(false)} />
+        ) : (
+          <motion.div
+            className="flex flex-col items-center justify-center h-screen bg-azul"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <motion.div
+              initial={{ y: 0 }}
+              animate={{ y: -50 }}
+              transition={{ duration: 1 }}
+            >
+              <Image src={caLogoAzul} alt="C&A Logo" width={400} />
+            </motion.div>
+            <p className="text-4xl text-white my-10 font-semibold">
+              O look oficial do
+            </p>
+            <Image src={rirLogo} alt="C&A Logo" width={400} quality={100} />
+            <motion.input
+              type="text"
+              placeholder="CPF"
+              autoComplete="off"
+              value={cpf}
+              onChange={handleCpfChange}
+              className="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-2 w-2/4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: showInput ? 1 : 0 }}
+              transition={{ duration: 1 }}
+            />
+            <Image
+              src={rightArrow}
+              alt="Arrow Logo"
+              width={120}
+              className="hover:cursor-pointer"
+              onClick={handleStart}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

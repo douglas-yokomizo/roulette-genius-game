@@ -15,6 +15,7 @@ import lookOficial from "./lookOficial.png";
 import rocamboleGanhador from "./rocamboleGanhador.png";
 import rocambolePerdeu from "./rocambolePerdeu.png";
 import caLogoBgAzul from "./caLogoBgAzul.png";
+import iddleBg from "./iddleBg.png";
 
 export const images = {
   bgAzul,
@@ -34,4 +35,5 @@ export const images = {
   rocamboleGanhador,
   rocambolePerdeu,
   caLogoBgAzul,
+  iddleBg,
 };

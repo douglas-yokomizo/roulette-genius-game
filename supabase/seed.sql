@@ -135,7 +135,7 @@ INSERT INTO "public"."prizes" ("id", "prize", "quantity", "active", "image_url",
 	(17, 'Jaqueta', 120, true, 'https://nzvspxppyqzrpcchotmf.supabase.co/storage/v1/object/public/products/jaqueta.png', 15, 0, false),
 	(18, 'Boné', 120, true, 'https://nzvspxppyqzrpcchotmf.supabase.co/storage/v1/object/public/products/bone.png', 15, 0, false),
 	(4, 'Shoulder Bag', 1200, true, 'https://nzvspxppyqzrpcchotmf.supabase.co/storage/v1/object/public/products/shoulder.png', 150, 0, true),
-	(15, 'Camiseta', 161, true, 'https://nzvspxppyqzrpcchotmf.supabase.co/storage/v1/object/public/products/camiseta.png', 20, 0, false);
+	(15, 'Camiseta', 160, true, 'https://nzvspxppyqzrpcchotmf.supabase.co/storage/v1/object/public/products/camiseta.png', 20, 0, false);
 
 
 --

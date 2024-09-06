@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useGeniusGame } from "../hooks/useGeniusGame";
 import { images } from "@/public/images";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const GeniusGame = () => {
   const {
@@ -60,8 +61,18 @@ const GeniusGame = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center text-center relative">
-      <div className="mb-4 mx-28 -translate-y-72">
+    <motion.div
+      className="flex flex-col h-screen justify-center items-center text-center relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      <motion.div
+        className="mb-72 mx-28"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <h1 className="text-7xl font-sharpBold font-bold text-azul mb-8">
           mostre que você é <br /> do fandom da C&A
         </h1>
@@ -69,21 +80,42 @@ const GeniusGame = () => {
           faça a mesma sequência <br /> de peças e cores <br /> para acumular
           pontos
         </h3>
-      </div>
+      </motion.div>
       {!isGameStarted ? (
-        <div
+        <motion.div
           className="flex justify-center items-center h-72"
           onClick={handleStartGame}
+          initial={{ scale: 1 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: 0.5,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
         >
-          <p className="text-5xl font-bold animate-pulse">
+          <p className="text-4xl font-bold">
             Toque na tela para começar o jogo
           </p>
-        </div>
+        </motion.div>
       ) : (
-        countdown > 0 && <p className="text-6xl font-bold">{countdown}</p>
+        countdown > 0 && (
+          <motion.p
+            className="text-6xl font-bold"
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {countdown}
+          </motion.p>
+        )
       )}
       {isGameStarted && countdown === 0 && (
-        <div className="my-10">
+        <motion.div
+          className="my-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
           <div className="flex justify-center items-center h-72">
             <div className="grid grid-rows-2 grid-cols-2 gap-10 gap-y-20">
               <div
@@ -167,7 +199,7 @@ const GeniusGame = () => {
               ></div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
       {message && <p className=" text-4xl my-5">{message}</p>}
       <Image
@@ -176,7 +208,7 @@ const GeniusGame = () => {
         width={500}
         className="absolute bottom-20"
       />
-    </div>
+    </motion.div>
   );
 };
 

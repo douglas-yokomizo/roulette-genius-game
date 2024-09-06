@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { images } from "@/public/images";
 import { fetchPrizes, drawPrize } from "../services/prizesService";
 import { useGameContext } from "../context/GameContext";
@@ -106,22 +107,41 @@ const RoulettePage = () => {
       className="flex relative flex-col w-full bg-azul items-center justify-center h-screen"
       onClick={handleScreenClick}
     >
-      {!isSpinning && !hasSpun && (
-        <p className="text-center text-white font-thin text-6xl -translate-y-36">
-          arraste o logo para <br /> descobrir seu possível <br />
-          prêmio
-        </p>
-      )}
-      {!isSpinning && hasSpun && drawnPrize && (
-        <p className="text-center text-6xl text-white font-thin -translate-y-36">
-          você está <br /> concorrendo a
-        </p>
-      )}
-      <div
+      <AnimatePresence>
+        {!isSpinning && !hasSpun && (
+          <motion.h2
+            className="text-center text-white font-thin text-6xl -translate-y-36"
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            arraste o logo para <br /> descobrir seu possível <br />
+            prêmio
+          </motion.h2>
+        )}
+        {!isSpinning && hasSpun && drawnPrize && (
+          <motion.p
+            className="text-center text-6xl text-white font-thin -translate-y-36"
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            você está <br /> concorrendo a
+          </motion.p>
+        )}
+      </AnimatePresence>
+      <motion.div
         onClick={spinRoulette}
         className={`mt-4 flex flex-col items-center justify-center p-2 ${
           isSpinning ? "flip-animation" : ""
         }`}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
+        transition={{ duration: 1 }}
+        layout
       >
         <div className="logo-container">
           <Image
@@ -139,21 +159,41 @@ const RoulettePage = () => {
             height={240}
           />
         </div>
-      </div>
-      {isSpinning && (
-        <p className="text-white text-4xl translate-y-20 font-thin">
-          Toque para parar
-        </p>
-      )}
-      {!isSpinning && hasSpun && (
-        <p className="translate-y-20 text-center text-white text-5xl font-thin">
-          dê um toque na tela <br /> para continuar o jogo
-        </p>
-      )}
-      <div className="flex text-white absolute bottom-20 text-3xl items-center">
+      </motion.div>
+      <AnimatePresence>
+        {isSpinning && (
+          <motion.p
+            className="text-white text-4xl translate-y-20 font-thin"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            Toque para parar
+          </motion.p>
+        )}
+        {!isSpinning && hasSpun && (
+          <motion.p
+            className="translate-y-20 text-center text-white text-5xl font-thin"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            dê um toque na tela <br /> para continuar o jogo
+          </motion.p>
+        )}
+      </AnimatePresence>
+      <motion.div
+        className="flex text-white absolute bottom-20 text-3xl items-center"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        transition={{ duration: 1 }}
+      >
         <p>o look oficial do</p>
         <Image src={images.rirLogo} alt="C&A Logo" width={200} />
-      </div>
+      </motion.div>
     </div>
   );
 };

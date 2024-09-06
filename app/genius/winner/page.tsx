@@ -4,6 +4,7 @@ import { images } from "@/public/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const WinnerPage = () => {
   const { drawnPrize, setDrawnPrize } = useGameContext();
@@ -19,29 +20,64 @@ const WinnerPage = () => {
   }, [router, setDrawnPrize]);
 
   return (
-    <div className="flex bg-azul h-screen text-white flex-col items-center justify-center">
-      <h1 className="text-[9rem] font-sharpBold font-[800] mb-6">parabéns!</h1>
-      <h2 className="text-7xl tracking-wider font-semibold text-center">
+    <motion.div
+      className="flex bg-azul h-screen text-white flex-col items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      <motion.h1
+        className="text-[9rem] font-sharpBold font-[800] mb-6"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        parabéns!
+      </motion.h1>
+      <motion.h2
+        className="text-7xl tracking-wider font-semibold text-center"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
         você mostrou que é <br /> um expert em moda
-      </h2>
+      </motion.h2>
       <div className="relative w-full flex justify-center items-center">
         <Image src={images.rocamboleGanhador} alt="" className="w-full" />
         {drawnPrize?.image_url && (
-          <Image
-            src={drawnPrize.image_url}
-            alt="Prêmio"
-            className="absolute max-w-[100%] max-h-[100%] object-contain h-auto z-10 top-1/2 left-1/2 tranform -translate-x-1/2 -translate-y-1/2"
-            width={600}
-            height={600}
-          />
+          <motion.div
+            initial={{ scale: 0, rotate: 0, opacity: 0 }}
+            animate={{ scale: 1, rotate: 360, opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0 flex justify-center items-center"
+          >
+            <Image
+              src={drawnPrize.image_url}
+              alt="Prêmio"
+              width={600}
+              height={600}
+            />
+          </motion.div>
         )}
       </div>
-      <p className="text-4xl italic">retire seu ticket com a promotora</p>
-      <div className="flex text-white absolute bottom-20 text-3xl items-center gap-2 font-sharpBold font-bold">
+      <motion.p
+        className="text-4xl italic"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 1 }}
+      >
+        retire seu ticket com a promotora
+      </motion.p>
+      <motion.div
+        className="flex text-white absolute bottom-20 text-3xl items-center gap-2 font-sharpBold font-bold"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 1.5 }}
+      >
         <p>o look oficial do</p>
         <Image src={images.rirLogo} alt="C&A Logo" width={200} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
