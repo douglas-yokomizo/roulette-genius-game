@@ -1,5 +1,5 @@
 interface CustomCheckboxProps {
-  label: string;
+  label: string | JSX.Element;
   checked: boolean;
   onChange: (checked: boolean) => void;
   color?: string;

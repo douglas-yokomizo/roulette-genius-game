@@ -1,18 +1,22 @@
 "use client";
-import { supabase } from "../utils/supabase/client";
+import { useState } from "react";
 import Image from "next/image";
+import * as Yup from "yup";
+import { supabase } from "../utils/supabase/client";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { toast } from "react-toastify";
+import { parsePhoneNumber } from "libphonenumber-js";
 import { images } from "@/public/images";
 import CustomCheckbox from "../components/CheckBox";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import InputMask from "react-input-mask";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { parsePhoneNumber } from "libphonenumber-js";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { PrivacyTermsModal } from "../components/TermsModal";
 
 const RegisterPage = () => {
+  const [isPrivacyTermsModalOpen, setPrivacyTermsModalOpen] = useState(false);
+
   const initialValues = {
     name: "",
     cpf: "",
@@ -23,6 +27,7 @@ const RegisterPage = () => {
     bigScreenAgreement: false,
     comunicationAgreement: false,
   };
+
   const router = useRouter();
 
   const validateWhatsApp = (value: any, countryCode: any) => {
@@ -293,7 +298,18 @@ const RegisterPage = () => {
 
             <div className="text-3xl flex flex-col gap-4 tracking-wide">
               <CustomCheckbox
-                label="estou de acordo com os termos de privacidade C&A*"
+                label={
+                  <span>
+                    estou de acordo com os{" "}
+                    <span
+                      className="underline cursor-pointer"
+                      onClick={() => setPrivacyTermsModalOpen(true)}
+                    >
+                      termos de privacidade C&A
+                    </span>
+                    *
+                  </span>
+                }
                 onChange={(checked) => {
                   setFieldValue("privacyTerms", checked);
                 }}
@@ -351,6 +367,10 @@ const RegisterPage = () => {
         alt="Look oficial do RIR"
         width={500}
         className="absolute bottom-20"
+      />
+      <PrivacyTermsModal
+        isOpen={isPrivacyTermsModalOpen}
+        onClose={() => setPrivacyTermsModalOpen(false)}
       />
     </div>
   );
