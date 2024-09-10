@@ -36,7 +36,7 @@ create table "public"."prizes" (
 create table "public"."users" (
     "id" integer not null default nextval('users_id_seq'::regclass),
     "name" text not null,
-    "cpf" text not null,
+    "cpf" text,
     "whatsapp" text not null,
     "email" character varying(255) not null,
     "created_at" timestamp without time zone default CURRENT_TIMESTAMP,

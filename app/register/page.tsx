@@ -115,6 +115,7 @@ const RegisterPage = () => {
       imageTerms,
       bigScreenAgreement,
       comunicationAgreement,
+      isNotBrazilianUser,
     } = values;
 
     const formattedName = name
@@ -125,18 +126,36 @@ const RegisterPage = () => {
       )
       .join(" ");
 
-    const { data: cpfData } = await supabase
-      .from("users")
-      .select("cpf")
-      .eq("cpf", cpf)
-      .single();
-
-    if (cpfData) {
-      toast("CPF já cadastrado. Por favor, verifique e tente novamente.", {
-        type: "error",
-      });
+    let formattedWhatsapp = whatsapp;
+    try {
+      const phoneNumber = parsePhoneNumber(whatsapp, "BR");
+      formattedWhatsapp = phoneNumber.format("E.164");
+    } catch (error) {
+      console.error("Erro ao formatar o número de WhatsApp:", error);
+      toast(
+        "Número de WhatsApp inválido. Por favor, verifique e tente novamente.",
+        {
+          type: "error",
+        }
+      );
       setSubmitting(false);
       return;
+    }
+
+    if (!isNotBrazilianUser) {
+      const { data: cpfData } = await supabase
+        .from("users")
+        .select("cpf")
+        .eq("cpf", cpf)
+        .single();
+
+      if (cpfData) {
+        toast("CPF já cadastrado. Por favor, verifique e tente novamente.", {
+          type: "error",
+        });
+        setSubmitting(false);
+        return;
+      }
     }
 
     const { data: emailData } = await supabase
@@ -156,7 +175,7 @@ const RegisterPage = () => {
     const { data: whatsappData } = await supabase
       .from("users")
       .select("whatsapp")
-      .eq("whatsapp", whatsapp)
+      .eq("whatsapp", formattedWhatsapp)
       .single();
 
     if (whatsappData) {
@@ -170,8 +189,8 @@ const RegisterPage = () => {
     const { data, error } = await supabase.from("users").insert([
       {
         name: formattedName,
-        cpf,
-        whatsapp,
+        cpf: isNotBrazilianUser ? null : cpf, // Set CPF to null if the user is not Brazilian
+        whatsapp: formattedWhatsapp,
         email,
         privacyTerms,
         imageTerms,
@@ -262,6 +281,7 @@ const RegisterPage = () => {
                 {({ field, form }: any) => (
                   <PhoneInput
                     {...field}
+                    enableSearch={true}
                     country={"br"}
                     containerClass={`border p-4 w-full rounded-full bg-cinza pl-2 text-black text-3xl ${
                       errors.whatsapp && touched.whatsapp
