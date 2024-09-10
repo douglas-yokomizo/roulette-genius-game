@@ -16,19 +16,7 @@ import { PrivacyTermsModal } from "../components/TermsModal";
 
 const RegisterPage = () => {
   const [isPrivacyTermsModalOpen, setPrivacyTermsModalOpen] = useState(false);
-
-  const initialValues = {
-    name: "",
-    cpf: "",
-    whatsapp: "",
-    email: "",
-    privacyTerms: false,
-    imageTerms: false,
-    bigScreenAgreement: false,
-    comunicationAgreement: false,
-  };
-
-  const router = useRouter();
+  const [isNotBrazilianUser, setIsNotBrazilianUser] = useState(false); // Now controlled by a checkbox or dropdown
 
   const validateWhatsApp = (value: any, countryCode: any) => {
     if (!value) return false;
@@ -40,7 +28,23 @@ const RegisterPage = () => {
     }
   };
 
+  const initialValues = {
+    name: "",
+    cpf: "",
+    whatsapp: "",
+    email: "",
+    privacyTerms: false,
+    imageTerms: false,
+    bigScreenAgreement: false,
+    comunicationAgreement: false,
+    isNotBrazilianUser: false, // New field
+  };
+
+  const router = useRouter();
+
   const validateCPF = (cpf: string) => {
+    if (isNotBrazilianUser) return true; // Skip CPF validation for non-Brazilian users
+
     cpf = cpf.replace(/[^\d]+/g, "");
     if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
@@ -60,22 +64,27 @@ const RegisterPage = () => {
     return cpf.endsWith(`${digit1}${digit2}`);
   };
 
-  const validationSchema = Yup.object({
+  const validationSchema = Yup.object().shape({
     name: Yup.string()
       .matches(
         /^[a-zA-Z]+ [a-zA-Z]+$/,
         "Nome completo deve conter pelo menos dois nomes"
       )
       .required("Nome completo é obrigatório"),
-    cpf: Yup.string()
-      .matches(
-        /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-        "CPF deve seguir o formato XXX.XXX.XXX-XX"
-      )
-      .required("CPF é obrigatório")
-      .test("is-valid-cpf", "CPF inválido", (value) =>
-        validateCPF(value || "")
-      ),
+    cpf: Yup.string().when("isNotBrazilianUser", {
+      is: false,
+      then: (schema) =>
+        schema
+          .matches(
+            /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+            "CPF deve seguir o formato XXX.XXX.XXX-XX"
+          )
+          .required("CPF é obrigatório")
+          .test("is-valid-cpf", "CPF inválido", (value) =>
+            validateCPF(value || "")
+          ),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     whatsapp: Yup.string()
       .required("WhatsApp é obrigatório")
       .test("is-valid-whatsapp", "Número de WhatsApp inválido", (value) =>
@@ -90,14 +99,8 @@ const RegisterPage = () => {
       [true],
       "Você deve concordar com o termo de uso de imagem"
     ),
+    isNotBrazilianUser: Yup.boolean().required(), // This field should be included as a boolean
   });
-
-  const capitalizeName = (name: string) => {
-    return name
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-  };
 
   const handleSubmit = async (
     values: any,
@@ -114,9 +117,15 @@ const RegisterPage = () => {
       comunicationAgreement,
     } = values;
 
-    const formattedName = capitalizeName(name);
+    const formattedName = name
+      .split(" ")
+      .map(
+        (word: string) =>
+          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(" ");
 
-    const { data: cpfData, error: cpfError } = await supabase
+    const { data: cpfData } = await supabase
       .from("users")
       .select("cpf")
       .eq("cpf", cpf)
@@ -130,7 +139,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const { data: emailData, error: emailError } = await supabase
+    const { data: emailData } = await supabase
       .from("users")
       .select("email")
       .eq("email", email)
@@ -144,7 +153,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const { data: whatsappData, error: whatsappError } = await supabase
+    const { data: whatsappData } = await supabase
       .from("users")
       .select("whatsapp")
       .eq("whatsapp", whatsapp)
@@ -197,12 +206,12 @@ const RegisterPage = () => {
         {({ isSubmitting, setFieldValue, values, errors, touched }) => (
           <Form className="flex flex-col gap-12 p-10 h-4/5 mt-20 font-sharp font-bold text-4xl w-11/12">
             <label>
-              <p className="pl-8">nome completo*</p>
+              <p className="pl-8">Nome completo*</p>
               <Field
                 type="text"
                 name="name"
                 autoComplete="off"
-                className={`border p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl capitalize ${
+                className={`border capitalize p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
                   errors.name && touched.name ? "border-red-500 border-2" : ""
                 }`}
               />
@@ -213,26 +222,39 @@ const RegisterPage = () => {
               />
             </label>
 
-            <label>
-              <p className="pl-8">cpf*</p>
-              <Field name="cpf">
-                {({ field }: any) => (
-                  <InputMask
-                    {...field}
-                    mask="999.999.999-99"
-                    autoComplete="off"
-                    className={`border p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
-                      errors.cpf && touched.cpf ? "border-red-500 border-2" : ""
-                    }`}
-                  />
-                )}
-              </Field>
-              <ErrorMessage
-                name="cpf"
-                component="div"
-                className="text-red-500 pl-8 text-2xl"
-              />
-            </label>
+            <CustomCheckbox
+              label="não sou brasileiro(a)"
+              onChange={(checked) => {
+                setFieldValue("isNotBrazilianUser", checked);
+              }}
+              checked={values.isNotBrazilianUser}
+              color="#4200F8"
+            />
+
+            {!values.isNotBrazilianUser && (
+              <label>
+                <p className="pl-8">cpf*</p>
+                <Field name="cpf">
+                  {({ field }: any) => (
+                    <InputMask
+                      {...field}
+                      mask="999.999.999-99"
+                      autoComplete="off"
+                      className={`border p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
+                        errors.cpf && touched.cpf
+                          ? "border-red-500 border-2"
+                          : ""
+                      }`}
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="cpf"
+                  component="div"
+                  className="text-red-500 pl-8 text-2xl"
+                />
+              </label>
+            )}
 
             <label>
               <p className="pl-8">whatsapp*</p>
