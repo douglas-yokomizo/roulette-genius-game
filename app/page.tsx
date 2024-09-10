@@ -303,6 +303,9 @@ const StartPage = () => {
                   width: "100%",
                   backgroundColor: "transparent",
                   color: "white",
+                  fontSize: "2rem",
+                  padding: "0.5rem",
+                  textAlign: "center",
                 }}
                 buttonStyle={{ backgroundColor: "transparent", border: "none" }}
                 placeholder="WhatsApp"
