@@ -66,9 +66,14 @@ const RegisterPage = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .matches(
-        /^[a-zA-Z]+ [a-zA-Z]+$/,
-        "Nome completo deve conter pelo menos dois nomes"
+      .test(
+        "has-two-names",
+        "Nome completo deve conter pelo menos dois nomes",
+        (value) => {
+          if (!value) return false;
+          const parts = value.trim().split(" ");
+          return parts.length >= 2;
+        }
       )
       .required("Nome completo é obrigatório"),
     cpf: Yup.string().when("isNotBrazilianUser", {
