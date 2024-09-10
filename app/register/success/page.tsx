@@ -27,9 +27,17 @@ const SuccessRegisterPage = () => {
         alt="qr code"
         className="absolute bottom-64 border-2 border-white rounded-lg p-8"
       />
-      <div className="text-white font-sharp font-bold text-3xl flex items-center absolute bottom-14">
-        <p>o look oficial do</p>
-        <Image src={images.rirLogo} alt="Look Oficial" width={200} />
+      <div className="text-white font-sharp font-bold text-3xl flex flex-col gap-10 items-center absolute bottom-14">
+        <p
+          onClick={() => router.push("/register")}
+          className="animate-pulse hover:cursor-pointer"
+        >
+          clique aqui para retornar à página de registro
+        </p>
+        <div className="flex items-center">
+          <p>o look oficial do</p>
+          <Image src={images.rirLogo} alt="Look Oficial" width={200} />
+        </div>
       </div>
     </div>
   );
