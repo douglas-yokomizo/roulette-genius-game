@@ -161,11 +161,13 @@ const StartPage = () => {
           type: "error",
         }
       );
-    } else if (data.hasPlayed) {
-      toast("Você já jogou. Não é permitido jogar novamente.", {
-        type: "error",
-      });
     } else {
+      // Commenting out the check for whether the user has already played
+      // if (data.hasPlayed) {
+      //   toast("Você já jogou. Não é permitido jogar novamente.", {
+      //     type: "error",
+      //   });
+      // } else {
       if (isBrazilian && "cpf" in data && formatCpf(data.cpf) === cpf) {
         // CPF validation passed
         await updateUserStatus();
@@ -184,6 +186,7 @@ const StartPage = () => {
           }
         );
       }
+      // }
     }
   };
 
