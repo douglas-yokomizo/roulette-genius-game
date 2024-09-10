@@ -16,6 +16,7 @@ import rocamboleGanhador from "./rocamboleGanhador.png";
 import rocambolePerdeu from "./rocambolePerdeu.png";
 import caLogoBgAzul from "./caLogoBgAzul.png";
 import iddleBg from "./iddleBg.png";
+import qrCodeFaceMatch from "./qrCodeFaceMatch.jpg";
 
 export const images = {
   bgAzul,
@@ -36,4 +37,5 @@ export const images = {
   rocambolePerdeu,
   caLogoBgAzul,
   iddleBg,
+  qrCodeFaceMatch
 };

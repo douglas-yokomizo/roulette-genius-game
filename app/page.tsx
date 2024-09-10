@@ -269,7 +269,7 @@ const StartPage = () => {
                 country={"us"}
                 value={whatsapp}
                 onChange={handleWhatsappChange}
-                containerClass="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-2 w-2/4"
+                containerClass="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-10 w-2/4"
                 inputStyle={{
                   width: "100%",
                   backgroundColor: "transparent",
