@@ -45,7 +45,7 @@ const Cover = ({ onClick }: { onClick: () => void }) => (
 const StartPage = () => {
   const [cpf, setCpf] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [countryCode, setCountryCode] = useState("us");
+  const [countryCode, setCountryCode] = useState("BR");
   const [isBrazilian, setIsBrazilian] = useState(true);
   const [showCover, setShowCover] = useState(true);
   const [showInput, setShowInput] = useState(false);
@@ -81,7 +81,7 @@ const StartPage = () => {
     value: string,
     country: { dialCode: string; countryCode: string }
   ) => {
-    setWhatsapp(value);
+    setWhatsapp(`+${value}`);
     setCountryCode(country.countryCode);
   };
 
@@ -116,11 +116,8 @@ const StartPage = () => {
         .single());
     } else {
       try {
-        const phoneNumber = parsePhoneNumber(
-          whatsapp,
-          countryCode.toUpperCase() as CountryCode | undefined
-        );
-        const formattedWhatsapp = phoneNumber.format("E.164");
+        // Use the exact input value for WhatsApp
+        const formattedWhatsapp = whatsapp;
         console.log("Formatted WhatsApp:", formattedWhatsapp);
         ({ data, error } = await supabase
           .from("users")
@@ -198,11 +195,8 @@ const StartPage = () => {
       identifier = cpf;
     } else {
       try {
-        const phoneNumber = parsePhoneNumber(
-          whatsapp,
-          countryCode.toUpperCase() as CountryCode | undefined
-        );
-        formattedWhatsapp = phoneNumber.format("E.164");
+        // Use the exact input value for WhatsApp
+        formattedWhatsapp = whatsapp;
         identifier = formattedWhatsapp;
       } catch (error) {
         console.error("Erro ao formatar o número de WhatsApp:", error);
@@ -234,6 +228,14 @@ const StartPage = () => {
   const handleInputFocus = (inputName: string) => {
     setFocusedInput(inputName);
     setIsKeyboardVisible(true);
+  };
+
+  const handleVirtualKeyboardChange = (value: string) => {
+    if (focusedInput === "cpf") {
+      setCpf(formatCpf(value));
+    } else if (focusedInput === "whatsapp") {
+      setWhatsapp(value.startsWith("+") ? value : `+${value}`);
+    }
   };
 
   return (
@@ -297,7 +299,7 @@ const StartPage = () => {
               />
             ) : (
               <PhoneInput
-                country={"us"}
+                country={"br"} // Set country to Brazil
                 value={whatsapp}
                 onChange={handleWhatsappChange}
                 onFocus={() => handleInputFocus("whatsapp")}
@@ -326,13 +328,7 @@ const StartPage = () => {
       </AnimatePresence>
       <VirtualKeyboard
         isVisible={isKeyboardVisible}
-        onChange={(value) => {
-          if (focusedInput === "cpf") {
-            setCpf(value);
-          } else if (focusedInput === "whatsapp") {
-            setWhatsapp(value);
-          }
-        }}
+        onChange={handleVirtualKeyboardChange}
         focusedInput={focusedInput}
       />
     </>
