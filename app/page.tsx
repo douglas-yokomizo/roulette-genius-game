@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { images } from "@/public/images";
 import { parsePhoneNumber, ParseError, CountryCode } from "libphonenumber-js";
 import PhoneInput from "react-phone-input-2";
+import VirtualKeyboard from "./components/VirtualKeyboard";
 
 const Cover = ({ onClick }: { onClick: () => void }) => (
   <motion.div
@@ -48,6 +49,8 @@ const StartPage = () => {
   const [isBrazilian, setIsBrazilian] = useState(true);
   const [showCover, setShowCover] = useState(true);
   const [showInput, setShowInput] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [focusedInput, setFocusedInput] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -185,16 +188,35 @@ const StartPage = () => {
   };
 
   const updateUserStatus = async () => {
-    //@ts-ignore
-    const phoneNumber = parsePhoneNumber(whatsapp, countryCode.toUpperCase());
-    const formattedWhatsapp = phoneNumber.format("E.164");
+    let identifier;
+    let formattedWhatsapp;
+
+    if (isBrazilian) {
+      identifier = cpf;
+    } else {
+      try {
+        const phoneNumber = parsePhoneNumber(
+          whatsapp,
+          countryCode.toUpperCase() as CountryCode | undefined
+        );
+        formattedWhatsapp = phoneNumber.format("E.164");
+        identifier = formattedWhatsapp;
+      } catch (error) {
+        console.error("Erro ao formatar o número de WhatsApp:", error);
+        toast(
+          "Houve um erro ao formatar o número de WhatsApp. Tente novamente.",
+          {
+            type: "error",
+          }
+        );
+        return;
+      }
+    }
+
     const { error: updateError } = await supabase
       .from("users")
       .update({ hasPlayed: true })
-      .eq(
-        isBrazilian ? "cpf" : "whatsapp",
-        isBrazilian ? cpf : formattedWhatsapp
-      );
+      .eq(isBrazilian ? "cpf" : "whatsapp", identifier);
 
     if (updateError) {
       console.error("Erro ao atualizar o status do jogo:", updateError);
@@ -204,6 +226,11 @@ const StartPage = () => {
     } else {
       router.push("/roulette");
     }
+  };
+
+  const handleInputFocus = (inputName: string) => {
+    setFocusedInput(inputName);
+    setIsKeyboardVisible(true);
   };
 
   return (
@@ -259,6 +286,7 @@ const StartPage = () => {
                 autoComplete="off"
                 value={cpf}
                 onChange={handleCpfChange}
+                onFocus={() => handleInputFocus("cpf")}
                 className="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-2 w-2/4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: showInput ? 1 : 0 }}
@@ -269,6 +297,7 @@ const StartPage = () => {
                 country={"us"}
                 value={whatsapp}
                 onChange={handleWhatsappChange}
+                onFocus={() => handleInputFocus("whatsapp")}
                 containerClass="text-center placeholder:text-white py-2 placeholder:font-thin bg-transparent my-32 text-white border-4 border-orange-500 text-6xl rounded-full px-10 w-2/4"
                 inputStyle={{
                   width: "100%",
@@ -289,6 +318,17 @@ const StartPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <VirtualKeyboard
+        isVisible={isKeyboardVisible}
+        onChange={(value) => {
+          if (focusedInput === "cpf") {
+            setCpf(value);
+          } else if (focusedInput === "whatsapp") {
+            setWhatsapp(value);
+          }
+        }}
+        focusedInput={focusedInput}
+      />
     </>
   );
 };
