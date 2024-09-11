@@ -19,9 +19,8 @@ export const useGeniusGame = () => {
   const [activeColor, setActiveColor] = useState<string | null>(null);
   const [clickedColor, setClickedColor] = useState<string | null>(null);
   const [hasWon, setHasWon] = useState(false);
-  const [lostAtThirdPhase, setLostAtThirdPhase] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const { setConsolationPrize, drawnPrize, difficulty } = useGameContext();
+  const { drawnPrize, difficulty } = useGameContext();
   const router = useRouter();
 
   const getWinningSequenceCount = () => {
@@ -62,12 +61,7 @@ export const useGeniusGame = () => {
       } else {
         setMessage("Não foi dessa vez!");
         setIsUserTurn(false);
-        if (phase === 3) {
-          setLostAtThirdPhase(true);
-          setConsolationPrize(true);
-        } else {
-          router.push("/genius/not-this-time");
-        }
+        router.push("/genius/not-this-time");
       }
     }
   }, [userSequence, sequence, isUserTurn, sequenceCount, phase]);
@@ -76,11 +70,8 @@ export const useGeniusGame = () => {
     if (gameStarted) {
       if (hasWon) {
         router.push("/genius/winner");
-      } else if (lostAtThirdPhase) {
-        router.push("/genius/consolation");
       } else if (
         !hasWon &&
-        !lostAtThirdPhase &&
         !isUserTurn &&
         userSequence.length === sequence.length &&
         sequence.length > 0
@@ -88,15 +79,7 @@ export const useGeniusGame = () => {
         router.push("/genius/not-this-time");
       }
     }
-  }, [
-    hasWon,
-    lostAtThirdPhase,
-    gameStarted,
-    isUserTurn,
-    userSequence,
-    sequence,
-    router,
-  ]);
+  }, [hasWon, gameStarted, isUserTurn, userSequence, sequence, router]);
 
   const addColorToSequence = () => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -150,7 +133,6 @@ export const useGeniusGame = () => {
     setPhase(1);
     setSequenceCount(0);
     setHasWon(false);
-    setLostAtThirdPhase(false);
     setGameStarted(true);
     setTimeout(() => {
       addColorToSequence();
@@ -172,7 +154,6 @@ export const useGeniusGame = () => {
     startGame,
     progressPercentage,
     hasWon,
-    lostAtThirdPhase,
     gameStarted,
   };
 };
