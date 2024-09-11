@@ -13,7 +13,6 @@ const VirtualKeyboard = ({
   focusedInput,
 }: IVirtualKeyboard) => {
   const [inputValue, setInputValue] = useState("");
-  const [lastAccentKey, setLastAccentKey] = useState("");
 
   useEffect(() => {
     if (!isVisible) {
@@ -64,8 +63,6 @@ const VirtualKeyboard = ({
     setInputValue(newValue);
     onChange(newValue);
   };
-
-  const keysRow = "1234567890";
 
   if (!isVisible) return null;
 

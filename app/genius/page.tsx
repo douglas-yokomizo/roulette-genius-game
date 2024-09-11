@@ -66,6 +66,7 @@ const GeniusGame = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
+      onClick={handleStartGame}
     >
       <motion.div
         className="mb-72 mx-28"
@@ -84,7 +85,6 @@ const GeniusGame = () => {
       {!isGameStarted ? (
         <motion.div
           className="flex justify-center items-center h-72"
-          onClick={handleStartGame}
           initial={{ scale: 1 }}
           animate={{ scale: 1 }}
           transition={{
