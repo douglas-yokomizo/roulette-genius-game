@@ -228,7 +228,7 @@ const RegisterPage = () => {
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, setFieldValue, values, errors, touched }) => (
-          <Form className="flex flex-col gap-12 p-4 md:p-10 h-4/5 mt-10 md:mt-20 font-sharp font-bold text-2xl md:text-4xl w-full md:w-11/12">
+          <Form className="flex flex-col gap-12 p-4  h-4/5 mt-2  font-sharp font-bold text-2xl md:text-4xl w-full md:w-11/12">
             <label>
               <p className="pl-4 md:pl-8">Nome completo*</p>
               <Field
@@ -407,15 +407,16 @@ const RegisterPage = () => {
             >
               Registrar
             </button>
+            <Image
+              src={images.lookOficial}
+              alt="Look oficial do RIR"
+              width={500}
+              className="mx-auto"
+            />
           </Form>
         )}
       </Formik>
-      <Image
-        src={images.lookOficial}
-        alt="Look oficial do RIR"
-        width={500}
-        className="absolute bottom-20"
-      />
+
       <PrivacyTermsModal
         isOpen={isPrivacyTermsModalOpen}
         onClose={() => setPrivacyTermsModalOpen(false)}
