@@ -118,7 +118,7 @@ const GeniusGame = () => {
         <>
           <button
             onClick={toggleAccessibilityMode}
-            className="absolute bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded"
+            className="absolute bottom-5 right-5 bg-azul text-white text-xl px-8 py-4 rounded"
           >
             Acessibilidade
           </button>

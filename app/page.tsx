@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import caLogoAzul from "../public/images/caLogoBgBranco.png";
-import rirLogo from "../public/images/rirLogoBranco.png";
 import rightArrow from "../public/images/rightArrow.png";
 import { supabase } from "./utils/supabase/client";
 import { toast } from "react-toastify";
