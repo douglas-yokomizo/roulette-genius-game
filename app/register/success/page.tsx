@@ -17,7 +17,7 @@ const SuccessRegisterPage = () => {
       <Image
         src={images.qrCodeFaceMatch}
         alt="qr code"
-        className="absolute bottom-32 md:bottom-64 border-2 border-white rounded-lg p-4 md:p-8 w-3/4 md:w-auto"
+        className="absolute bottom-[11rem] border-2 border-white rounded-lg p-4 md:p-8 w-3/4 md:w-auto"
       />
       <div className="text-white font-sharp font-bold text-xl md:text-3xl flex flex-col gap-6 md:gap-10 items-center absolute bottom-10 md:bottom-14">
         <p
