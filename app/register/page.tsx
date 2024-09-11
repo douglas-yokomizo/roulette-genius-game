@@ -220,7 +220,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center relative h-screen text-azul">
+    <div className="flex flex-col justify-center items-center relative h-screen text-azul p-4 md:p-10">
       <Image src={images.caLogoBgAzul} alt="C&A Logo" />
       <Formik
         initialValues={initialValues}
@@ -228,21 +228,21 @@ const RegisterPage = () => {
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, setFieldValue, values, errors, touched }) => (
-          <Form className="flex flex-col gap-12 p-10 h-4/5 mt-20 font-sharp font-bold text-4xl w-11/12">
+          <Form className="flex flex-col gap-12 p-4 md:p-10 h-4/5 mt-10 md:mt-20 font-sharp font-bold text-2xl md:text-4xl w-full md:w-11/12">
             <label>
-              <p className="pl-8">Nome completo*</p>
+              <p className="pl-4 md:pl-8">Nome completo*</p>
               <Field
                 type="text"
                 name="name"
                 autoComplete="off"
-                className={`border capitalize p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
+                className={`border capitalize p-2 md:p-4 w-full rounded-full bg-cinza pl-4 md:pl-10 text-black text-xl md:text-3xl ${
                   errors.name && touched.name ? "border-red-500 border-2" : ""
                 }`}
               />
               <ErrorMessage
                 name="name"
                 component="div"
-                className="text-red-500 pl-8 text-2xl"
+                className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
               />
             </label>
 
@@ -257,14 +257,14 @@ const RegisterPage = () => {
 
             {!values.isNotBrazilianUser && (
               <label>
-                <p className="pl-8">cpf*</p>
+                <p className="pl-4 md:pl-8">cpf*</p>
                 <Field name="cpf">
                   {({ field }: any) => (
                     <InputMask
                       {...field}
                       mask="999.999.999-99"
                       autoComplete="off"
-                      className={`border p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
+                      className={`border p-2 md:p-4 w-full rounded-full bg-cinza pl-4 md:pl-10 text-black text-xl md:text-3xl ${
                         errors.cpf && touched.cpf
                           ? "border-red-500 border-2"
                           : ""
@@ -275,20 +275,20 @@ const RegisterPage = () => {
                 <ErrorMessage
                   name="cpf"
                   component="div"
-                  className="text-red-500 pl-8 text-2xl"
+                  className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
                 />
               </label>
             )}
 
             <label>
-              <p className="pl-8">whatsapp*</p>
+              <p className="pl-4 md:pl-8">whatsapp*</p>
               <Field name="whatsapp">
                 {({ field, form }: any) => (
                   <PhoneInput
                     {...field}
                     enableSearch={true}
                     country={"br"}
-                    containerClass={`border p-4 w-full rounded-full bg-cinza pl-2 text-black text-3xl ${
+                    containerClass={`border p-2 md:p-4 w-full rounded-full bg-cinza pl-2 text-black text-xl md:text-3xl ${
                       errors.whatsapp && touched.whatsapp
                         ? "border-red-500 border-2"
                         : ""
@@ -303,10 +303,11 @@ const RegisterPage = () => {
                     inputStyle={{
                       backgroundColor: "#E6E6E6",
                       border: "none",
-                      fontSize: "1.875rem",
-                      lineHeight: "2.25rem",
+                      fontSize: "1.25rem md:1.875rem",
+                      lineHeight: "1.75rem md:2.25rem",
                       fontFamily: "SharpSans",
-                      padding: "1rem 1rem 1rem 3rem",
+                      padding:
+                        "0.75rem 1rem 0.75rem 2rem md:1rem 1rem 1rem 3rem",
                       width: "calc(100% - 1.5rem)",
                     }}
                     onChange={(value, country, e, formattedValue) =>
@@ -322,28 +323,28 @@ const RegisterPage = () => {
               <ErrorMessage
                 name="whatsapp"
                 component="div"
-                className="text-red-500 pl-8 text-2xl"
+                className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
               />
             </label>
 
             <label>
-              <p className="pl-8">email*</p>
+              <p className="pl-4 md:pl-8">email*</p>
               <Field
                 type="email"
                 name="email"
                 autoComplete="off"
-                className={`border p-4 w-full rounded-full bg-cinza pl-10 text-black text-3xl ${
+                className={`border p-2 md:p-4 w-full rounded-full bg-cinza pl-4 md:pl-10 text-black text-xl md:text-3xl ${
                   errors.email && touched.email ? "border-red-500 border-2" : ""
                 }`}
               />
               <ErrorMessage
                 name="email"
                 component="div"
-                className="text-red-500 pl-8 text-2xl"
+                className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
               />
             </label>
 
-            <div className="text-3xl flex flex-col gap-4 tracking-wide">
+            <div className="text-xl md:text-3xl flex flex-col gap-4 tracking-wide">
               <CustomCheckbox
                 label={
                   <span>
@@ -366,7 +367,7 @@ const RegisterPage = () => {
               <ErrorMessage
                 name="privacyTerms"
                 component="div"
-                className="text-red-500 pl-8 text-2xl"
+                className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
               />
               <CustomCheckbox
                 label="estou de acordo com o termo de uso de imagem*"
@@ -379,7 +380,7 @@ const RegisterPage = () => {
               <ErrorMessage
                 name="imageTerms"
                 component="div"
-                className="text-red-500 pl-8 text-2xl"
+                className="text-red-500 pl-4 md:pl-8 text-lg md:text-2xl"
               />
               <CustomCheckbox
                 label="concordo em aparecer no telão do stand"
@@ -397,11 +398,11 @@ const RegisterPage = () => {
                 checked={values.comunicationAgreement}
                 color="#4200F8"
               />
-              <p className="ml-14 mt-6">*itens obrigatórios</p>
+              <p className="ml-4 md:ml-14 mt-6">*itens obrigatórios</p>
             </div>
             <button
               type="submit"
-              className="bg-azul text-white py-6 mt-10 w-full rounded-full"
+              className="bg-azul text-white py-4 md:py-6 mt-10 w-full rounded-full"
               disabled={isSubmitting}
             >
               Registrar
