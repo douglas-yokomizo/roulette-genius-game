@@ -9,7 +9,7 @@ import rightArrow from "../public/images/rightArrow.png";
 import { supabase } from "./utils/supabase/client";
 import { toast } from "react-toastify";
 import { images } from "@/public/images";
-import { parsePhoneNumber, ParseError, CountryCode } from "libphonenumber-js";
+import { parsePhoneNumber, ParseError } from "libphonenumber-js";
 import PhoneInput from "react-phone-input-2";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 
@@ -34,10 +34,17 @@ const Cover = ({ onClick }: { onClick: () => void }) => (
       transition={{ duration: 1 }}
     >
       <Image src={caLogoAzul} alt="C&A Logo" width={400} />
-      <p className="text-5xl text-white my-10 font-sharpBold font-bold">
+      <p className="text-5xl text-white mt-10 font-sharpBold font-bold">
         o look oficial do
       </p>
-      <Image src={rirLogo} alt="C&A Logo" width={400} quality={100} />
+      <Image
+        src={images.rirLogo1000}
+        alt="RIR Logo"
+        width={800}
+        height={800}
+        layout="responsive"
+        quality={100}
+      />
     </motion.div>
   </motion.div>
 );
@@ -258,10 +265,15 @@ const StartPage = () => {
             >
               <Image src={caLogoAzul} alt="C&A Logo" width={400} />
             </motion.div>
-            <p className="text-4xl text-white my-10 font-semibold">
+            <p className="text-4xl text-white mt-10 font-semibold">
               O look oficial do
             </p>
-            <Image src={rirLogo} alt="C&A Logo" width={400} quality={100} />
+            <Image
+              src={images.rirLogo1000}
+              alt="C&A Logo"
+              width={400}
+              quality={100}
+            />
             <div className="my-10 flex gap-4">
               <button
                 className={`px-6 py-3 rounded-full text-2xl font-bold ${

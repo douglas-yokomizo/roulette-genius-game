@@ -17,6 +17,7 @@ import rocambolePerdeu from "./rocambolePerdeu.png";
 import caLogoBgAzul from "./caLogoBgAzul.png";
 import iddleBg from "./iddleBg.png";
 import qrCodeFaceMatch from "./qrCodeFaceMatch.jpg";
+import rirLogo1000 from "./RockinRio-Logo.png";
 
 export const images = {
   bgAzul,
@@ -37,5 +38,6 @@ export const images = {
   rocambolePerdeu,
   caLogoBgAzul,
   iddleBg,
-  qrCodeFaceMatch
+  qrCodeFaceMatch,
+  rirLogo1000
 };
