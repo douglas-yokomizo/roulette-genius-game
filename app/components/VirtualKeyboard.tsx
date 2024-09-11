@@ -25,14 +25,6 @@ const VirtualKeyboard = ({
     setInputValue("");
   }, [focusedInput]);
 
-  const combineAccentWithChar = (accent: string, char: string): string => {
-    const accentsMap: Record<string, Record<string, string>> = {
-      "´": { a: "á", e: "é", i: "í", o: "ó", u: "ú" },
-      "~": { a: "ã", o: "õ", n: "ñ" },
-    };
-    return accentsMap[accent]?.[char] || char;
-  };
-
   const formatCpf = (value: string) => {
     return value
       .replace(/\D/g, "")
@@ -61,11 +53,6 @@ const VirtualKeyboard = ({
 
     if (key === "backspace") {
       newValue = newValue.slice(0, -1);
-    } else if (lastAccentKey) {
-      newValue += combineAccentWithChar(lastAccentKey, key);
-      setLastAccentKey("");
-    } else if (key === "´" || key === "~") {
-      setLastAccentKey(key);
     } else {
       newValue += key;
     }
@@ -78,42 +65,63 @@ const VirtualKeyboard = ({
     onChange(newValue);
   };
 
-  const keysRow1 = "1234567890-@";
-  const keysRow2 = "qwertyuiop´";
-  const keysRow3 = "asdfghjklç~";
-  const keysRow4 = "zxcvbnm.,[]";
+  const keysRow = "1234567890";
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed w-4/5 bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 p-6 rounded-t-lg shadow-lg">
-      {[keysRow1, keysRow2, keysRow3, keysRow4].map((row, index) => (
-        <div key={index} className="flex justify-center my-1">
-          {row.split("").map((key) => (
-            <button
-              key={key}
-              onClick={() => handleKeyPress(key)}
-              className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
-            >
-              {key}
-            </button>
-          ))}
-          {index === 0 && (
-            <button
-              onClick={() => handleKeyPress("backspace")}
-              className="mx-1 px-2 py-1 bg-white border border-gray-400 rounded shadow"
-            >
-              Backspace
-            </button>
-          )}
+    <div className="fixed w-fit bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 p-6 rounded-t-lg shadow-lg">
+      <div className="flex justify-center my-1">
+        <div className="flex flex-col">
+          <div className="flex justify-center my-1">
+            {"123".split("").map((key) => (
+              <button
+                key={key}
+                onClick={() => handleKeyPress(key)}
+                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-center my-1">
+            {"456".split("").map((key) => (
+              <button
+                key={key}
+                onClick={() => handleKeyPress(key)}
+                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-center my-1">
+            {"789".split("").map((key) => (
+              <button
+                key={key}
+                onClick={() => handleKeyPress(key)}
+                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+              >
+                {key}
+              </button>
+            ))}
+          </div>
         </div>
-      ))}
+        <div className="flex flex-col justify-center ml-2">
+          <button
+            onClick={() => handleKeyPress("backspace")}
+            className="px-2 py-1 bg-white border h-full border-gray-400 rounded shadow"
+          >
+            Backspace
+          </button>
+        </div>
+      </div>
       <div className="flex justify-center my-1">
         <button
-          onClick={() => handleKeyPress("space")}
-          className="w-full px-8 py-4 bg-white border border-gray-400 rounded shadow"
+          onClick={() => handleKeyPress("0")}
+          className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mt-1"
         >
-          Espaço
+          0
         </button>
       </div>
     </div>
