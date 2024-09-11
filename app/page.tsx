@@ -331,7 +331,7 @@ const StartPage = () => {
               src={rightArrow}
               alt="Arrow Logo"
               width={120}
-              className="hover:cursor-pointer"
+              className="hover:cursor-pointer mb-16"
               onClick={handleStart}
             />
           </motion.div>

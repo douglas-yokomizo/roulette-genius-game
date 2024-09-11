@@ -39,15 +39,7 @@ const NotThisTimePage = () => {
       >
         não foi dessa vez
       </motion.h3>
-      <motion.h4
-        className="text-5xl font-semibold my-32 text-center"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        mas você ganhou um cupom <br /> de descontos nas compras <br /> em
-        nossas lojas no Rock in Rio
-      </motion.h4>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
