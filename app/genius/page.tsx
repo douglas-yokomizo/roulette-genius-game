@@ -67,22 +67,22 @@ const GeniusGame = () => {
 
   return (
     <motion.div
-      className="flex flex-col h-screen justify-center items-center text-center relative"
+      className="flex flex-col h-screen justify-center items-center text-center relative p-4 md:p-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
       onClick={!isGameStarted ? handleStartGame : undefined}
     >
       <motion.div
-        className="mb-72 mx-28"
+        className="mb-72 mx-4 md:mx-28"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-7xl font-sharpBold font-bold text-azul mb-8">
+        <h1 className="text-4xl md:text-7xl font-sharpBold font-bold text-azul mb-4 md:mb-8">
           mostre que você é <br /> do fandom da C&A
         </h1>
-        <h3 className="text-5xl font-sharp font-bold">
+        <h3 className="text-2xl md:text-5xl font-sharp font-bold">
           faça a mesma sequência <br /> de peças e cores <br /> para acumular
           pontos
         </h3>
@@ -98,14 +98,14 @@ const GeniusGame = () => {
             repeatType: "reverse",
           }}
         >
-          <p className="text-4xl font-bold">
+          <p className="text-2xl md:text-4xl font-bold">
             Toque na tela para começar o jogo
           </p>
         </motion.div>
       ) : (
         countdown > 0 && (
           <motion.p
-            className="text-6xl font-bold"
+            className="text-4xl md:text-6xl font-bold"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -118,26 +118,26 @@ const GeniusGame = () => {
         <>
           <button
             onClick={toggleAccessibilityMode}
-            className="absolute bottom-5 right-5 bg-azul text-white text-xl px-8 py-4 rounded"
+            className="absolute bottom-5 right-5 bg-azul text-white text-lg md:text-xl px-4 md:px-8 py-2 md:py-4 rounded"
           >
             Acessibilidade
           </button>
           {isAccessibilityMode ? (
             <>
-              <div className="flex flex-col items-center transform -translate-y-44 justify-center gap-6">
-                <p className="text-5xl font-bold w-11/12">
+              <div className="flex flex-col items-center transform -translate-y-20 md:-translate-y-44 justify-center gap-4 md:gap-6">
+                <p className="text-3xl md:text-5xl font-bold w-11/12">
                   acompanhe sua pontuação
                 </p>
                 <div className="w-full bg-transparent border-[6px] border-azul rounded-full mt-4">
                   <div
-                    className="bg-azul h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
+                    className="bg-azul h-10 md:h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
               </div>
               <motion.div className="mt-8 mb-2">
                 <div className="flex justify-center items-center">
-                  <div className="grid grid-rows-2 grid-cols-2 gap-10 gap-y-20">
+                  <div className="grid grid-rows-2 grid-cols-2 gap-4 md:gap-10 gap-y-10 md:gap-y-20">
                     <div
                       className="row-start-1 col-start-1 relative"
                       onClick={() => handleUserClick("roxo")}
@@ -214,7 +214,7 @@ const GeniusGame = () => {
             <>
               <motion.div className="my-10">
                 <div className="flex justify-center items-center h-72">
-                  <div className="grid grid-rows-2 grid-cols-2 gap-10 gap-y-20">
+                  <div className="grid grid-rows-2 grid-cols-2 gap-4 md:gap-10 gap-y-10 md:gap-y-20">
                     <div
                       className="row-start-1 col-start-1 relative"
                       onClick={() => handleUserClick("roxo")}
@@ -286,13 +286,13 @@ const GeniusGame = () => {
                   </div>
                 </div>
               </motion.div>
-              <div className="flex flex-col items-center justify-center mt-64 gap-6">
-                <p className="text-5xl font-bold w-11/12">
+              <div className="flex flex-col items-center justify-center mt-32 md:mt-64 gap-4 md:gap-6">
+                <p className="text-3xl md:text-5xl font-bold w-11/12">
                   acompanhe sua pontuação
                 </p>
                 <div className="w-full bg-transparent border-[6px] border-azul rounded-full mt-4">
                   <div
-                    className="bg-azul h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
+                    className="bg-azul h-10 md:h-20 w-4/5 rounded-full transition-all duration-500 ease-in-out"
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
@@ -301,12 +301,12 @@ const GeniusGame = () => {
           )}
         </>
       )}
-      {message && <p className=" text-4xl my-5">{message}</p>}
+      {message && <p className="text-2xl md:text-4xl my-5">{message}</p>}
       <Image
         src={images.lookOficial}
         alt="Look oficial do RIR"
-        width={500}
-        className="absolute bottom-20"
+        width={300}
+        className="mx-auto mt-28"
       />
     </motion.div>
   );
