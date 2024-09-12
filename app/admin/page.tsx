@@ -5,6 +5,10 @@ import { useGameContext } from "../context/GameContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Bar } from "react-chartjs-2";
+import {
+  fetchUserStatistics,
+  fetchParticipants,
+} from "../services/userServices";
 import "chart.js/auto";
 
 const AdminPage = () => {
@@ -17,6 +21,50 @@ const AdminPage = () => {
   const [editingPrize, setEditingPrize] = useState<any | null>(null);
   const [deletingPrize, setDeletingPrize] = useState<any | null>(null);
   const [consolationPrize, setConsolationPrize] = useState<any | null>(null);
+  const [userStats, setUserStats] = useState({ totalUsers: 0, usersByDay: {} });
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [participants, setParticipants] = useState<
+    {
+      id: number;
+      name: string;
+      email: string;
+      whatsapp: string;
+      bigScreenAgreement: boolean;
+      comunicationAgreement: boolean;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const stats = await fetchUserStatistics();
+        setUserStats(stats);
+
+        const participantsData = await fetchParticipants(page);
+        setParticipants(participantsData);
+
+        const totalParticipants = stats.totalUsers; // Replace with actual total participants count
+        setTotalPages(Math.ceil(totalParticipants / 10));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    loadData();
+  }, [page]);
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
   useEffect(() => {
     setDifficultyState(difficulty);
@@ -463,6 +511,84 @@ const AdminPage = () => {
               )}
             </div>
           ))}
+        </div>
+      </div>
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+          Estatísticas de Usuários
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Total de Usuários</h2>
+            <p className="text-xl">{userStats.totalUsers}</p>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Usuários por Dia</h2>
+            <ul>
+              {Object.entries(userStats.usersByDay).map(([date, count]) => (
+                <li key={date} className="text-xl">
+                  {date}: {String(count)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+          Participantes
+        </h1>
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b border-gray-200">ID</th>
+              <th className="py-2 px-4 border-b border-gray-200">Nome</th>
+              <th className="py-2 px-4 border-b border-gray-200">Email</th>
+              <th className="py-2 px-4 border-b border-gray-200">Whatsapp</th>
+              <th className="py-2 px-4 border-b border-gray-200">
+                Aceita aparecer no telão
+              </th>
+              <th className="py-2 px-4 border-b border-gray-200">
+                Aceita receber comunicações da C&A
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {participants.map((participant) => (
+              <tr key={participant.id}>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.id}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.name}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.email}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.whatsapp}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.bigScreenAgreement ? "Sim" : "Não"}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {participant.comunicationAgreement ? "Sim" : "Não"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="pagination-controls">
+          <button onClick={handlePreviousPage} disabled={page === 1}>
+            Previous
+          </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
+          <button onClick={handleNextPage} disabled={page === totalPages}>
+            Next
+          </button>
         </div>
       </div>
     </div>
