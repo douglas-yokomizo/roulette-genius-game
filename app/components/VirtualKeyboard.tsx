@@ -68,7 +68,7 @@ const VirtualKeyboard = ({
   if (!isVisible) return null;
 
   return (
-    <Draggable handle=".handle">
+    <Draggable handle=".handle" defaultPosition={{ x: 260, y: -900 }}>
       <div className="fixed w-fit bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 p-6 rounded-t-lg shadow-lg">
         <div className="handle cursor-move bg-gray-300 p-2 rounded-t-lg text-center">
           Drag Me
