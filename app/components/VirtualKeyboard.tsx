@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Draggable from "react-draggable";
 
 interface IVirtualKeyboard {
   isVisible: boolean;
@@ -67,61 +68,66 @@ const VirtualKeyboard = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed w-fit bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 p-6 rounded-t-lg shadow-lg">
-      <div className="flex justify-center my-1">
-        <div className="flex flex-col">
-          <div className="flex justify-center my-1">
-            {"123".split("").map((key) => (
-              <button
-                key={key}
-                onClick={() => handleKeyPress(key)}
-                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
-              >
-                {key}
-              </button>
-            ))}
+    <Draggable handle=".handle">
+      <div className="fixed w-fit bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 p-6 rounded-t-lg shadow-lg">
+        <div className="handle cursor-move bg-gray-300 p-2 rounded-t-lg text-center">
+          Drag Me
+        </div>
+        <div className="flex justify-center my-1">
+          <div className="flex flex-col">
+            <div className="flex justify-center my-1">
+              {"123".split("").map((key) => (
+                <button
+                  key={key}
+                  onClick={() => handleKeyPress(key)}
+                  className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-center my-1">
+              {"456".split("").map((key) => (
+                <button
+                  key={key}
+                  onClick={() => handleKeyPress(key)}
+                  className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-center my-1">
+              {"789".split("").map((key) => (
+                <button
+                  key={key}
+                  onClick={() => handleKeyPress(key)}
+                  className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex justify-center my-1">
-            {"456".split("").map((key) => (
-              <button
-                key={key}
-                onClick={() => handleKeyPress(key)}
-                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
-              >
-                {key}
-              </button>
-            ))}
-          </div>
-          <div className="flex justify-center my-1">
-            {"789".split("").map((key) => (
-              <button
-                key={key}
-                onClick={() => handleKeyPress(key)}
-                className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mx-1"
-              >
-                {key}
-              </button>
-            ))}
+          <div className="flex flex-col justify-center ml-2">
+            <button
+              onClick={() => handleKeyPress("backspace")}
+              className="px-2 py-1 bg-white border h-full border-gray-400 rounded shadow"
+            >
+              Backspace
+            </button>
           </div>
         </div>
-        <div className="flex flex-col justify-center ml-2">
+        <div className="flex justify-center my-1">
           <button
-            onClick={() => handleKeyPress("backspace")}
-            className="px-2 py-1 bg-white border h-full border-gray-400 rounded shadow"
+            onClick={() => handleKeyPress("0")}
+            className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mt-1"
           >
-            Backspace
+            0
           </button>
         </div>
       </div>
-      <div className="flex justify-center my-1">
-        <button
-          onClick={() => handleKeyPress("0")}
-          className="px-4 py-3 w-full bg-white border border-gray-400 rounded shadow mt-1"
-        >
-          0
-        </button>
-      </div>
-    </div>
+    </Draggable>
   );
 };
 
