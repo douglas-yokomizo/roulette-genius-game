@@ -26,9 +26,9 @@ export const useGeniusGame = () => {
   const getWinningSequenceCount = () => {
     switch (difficulty) {
       case "easy":
-        return 5;
+        return 6;
       case "medium":
-        return 7;
+        return 8;
       case "hard":
       default:
         return 10;
@@ -92,7 +92,7 @@ export const useGeniusGame = () => {
 
   const playSequence = (seq: string[]) => {
     const delay =
-      difficulty === "easy" ? 1000 : difficulty === "medium" ? 700 : 500;
+      difficulty === "easy" ? 1000 : difficulty === "medium" ? 600 : 500;
     seq.forEach((color, index) => {
       setTimeout(() => {
         setActiveColor(color);

@@ -9,7 +9,8 @@ import { useGameContext } from "../context/GameContext";
 import Loading from "../components/Loading";
 
 const RoulettePage = () => {
-  const [prizes, setPrizes] = useState<any[]>([]);
+  const [allPrizes, setAllPrizes] = useState<any[]>([]);
+  const [availablePrizes, setAvailablePrizes] = useState<any[]>([]);
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentImage, setCurrentImage] = useState(images.caLogoBgBranco);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
@@ -22,9 +23,13 @@ const RoulettePage = () => {
       try {
         const data = await fetchPrizes();
         const filteredPrizes = data.filter(
-          (prize) => prize.active && prize.daily_limit > prize.distributed_today
+          (prize) =>
+            prize.active &&
+            prize.daily_limit > prize.distributed_today &&
+            prize.quantity > 0
         );
-        setPrizes(filteredPrizes);
+        setAllPrizes(data);
+        setAvailablePrizes(filteredPrizes);
       } catch (error) {
         console.error(error);
       }
@@ -33,12 +38,12 @@ const RoulettePage = () => {
   }, []);
 
   const handleDrawPrize = async () => {
-    const distributedToday = prizes.reduce(
+    const distributedToday = availablePrizes.reduce(
       (acc, prize) => acc + prize.distributed_today,
       0
     );
 
-    const prize = drawPrize(prizes, distributedToday);
+    const prize = drawPrize(availablePrizes, distributedToday);
     if (prize) {
       try {
         setDrawnPrize(prize);
@@ -69,7 +74,7 @@ const RoulettePage = () => {
       let count = 0;
       const newIntervalId = setInterval(() => {
         setCurrentImage(() => {
-          const filteredPrizes = prizes.filter(
+          const filteredPrizes = allPrizes.filter(
             (prize) => !prize.is_consolation
           );
           if (filteredPrizes.length === 0) {
@@ -98,7 +103,7 @@ const RoulettePage = () => {
     }
   };
 
-  if (prizes.length === 0) {
+  if (allPrizes.length === 0) {
     return <Loading />;
   }
 
