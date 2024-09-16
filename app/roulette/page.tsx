@@ -74,16 +74,13 @@ const RoulettePage = () => {
       let count = 0;
       const newIntervalId = setInterval(() => {
         setCurrentImage(() => {
-          const filteredPrizes = allPrizes.filter(
-            (prize) => !prize.is_consolation
-          );
-          if (filteredPrizes.length === 0) {
+          if (allPrizes.length === 0) {
             return images.caLogoBgBranco;
           }
           return count % 2 === 0
             ? images.caLogoBgBranco
-            : filteredPrizes[Math.floor(count / 2) % filteredPrizes.length]
-                ?.image_url || images.caLogoBgBranco;
+            : allPrizes[Math.floor(count / 2) % allPrizes.length]?.image_url ||
+                images.caLogoBgBranco;
         });
         count++;
         if (count === 40) {
