@@ -3,12 +3,53 @@ import { useGameContext } from "@/app/context/GameContext";
 import { images } from "@/public/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 const WinnerPage = () => {
   const { drawnPrize, setDrawnPrize } = useGameContext();
   const router = useRouter();
+  const touchStartX = useRef(0);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      router.replace("/genius/winner"); // Redirect back to the WinnerPage
+    };
+
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault(); // Disable right-click
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      event.preventDefault(); // Disable key presses
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartX.current = event.touches[0].clientX;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const touchEndX = event.touches[0].clientX;
+      if (touchEndX > touchStartX.current + 50) {
+        event.preventDefault(); // Prevent swipe to the right
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchmove", handleTouchMove);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [router]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,7 +62,7 @@ const WinnerPage = () => {
 
   return (
     <motion.div
-      className="flex bg-azul h-screen text-white flex-col items-center justify-center"
+      className="flex bg-azul h-screen text-white flex-col items-center justify-center relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -77,6 +118,11 @@ const WinnerPage = () => {
         <p>o look oficial do</p>
         <Image src={images.rirLogo} alt="C&A Logo" width={200} />
       </motion.div>
+      {/* Full-screen overlay to block interactions */}
+      <div
+        className="absolute inset-0 bg-transparent z-50"
+        style={{ pointerEvents: "none" }}
+      ></div>
     </motion.div>
   );
 };
