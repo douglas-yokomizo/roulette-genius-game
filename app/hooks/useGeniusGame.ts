@@ -109,8 +109,17 @@ export const useGeniusGame = () => {
 
   const handleUserClick = (color: string) => {
     if (isUserTurn) {
-      setUserSequence([...userSequence, color]);
+      const newSequence = [...userSequence, color];
+      setUserSequence(newSequence);
       setClickedColor(color);
+
+      if (sequence[newSequence.length - 1] !== color) {
+        setMessage("Não foi dessa vez!");
+        setIsUserTurn(false);
+        router.push("/genius/not-this-time");
+        return;
+      }
+
       setTimeout(() => {
         setClickedColor(null);
       }, 300);
