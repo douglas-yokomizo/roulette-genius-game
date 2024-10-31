@@ -1,4 +1,4 @@
-# JLI C&A Rock in Rio 2024
+# Roleta virtual e jogo Genius
 
 Guia para configurar a aplicação localmente, incluindo a configuração do Supabase local e Docker.
 
@@ -46,3 +46,5 @@ npx supabase start
 - Rode o comando `npm run db:push`
 - Se houver um erro "must be the owner of the table...":
   - vá na página do projeto do supabase online e escreva o seguinte comando na aba de "SQL Editor" `ALTER TABLE "nome_da_tabela OWNER TO postgres"`
+
+### Feito para Phygital Solutions por Douglas Yokomizo
